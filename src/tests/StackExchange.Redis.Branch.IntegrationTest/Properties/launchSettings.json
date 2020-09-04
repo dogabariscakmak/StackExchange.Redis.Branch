@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "StackExchange.Redis.Branch.IntegrationTest": {
+      "commandName": "Project"
+    }
+  }
+}

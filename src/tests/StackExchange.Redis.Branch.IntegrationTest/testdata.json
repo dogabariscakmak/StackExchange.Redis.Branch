@@ -1,0 +1,1302 @@
+[
+  {
+    "Id": "c5f569f2-c80e-4b8e-808c-88acb0fefa5c",
+    "Symbol": "MMM",
+    "Name": "3M Company",
+    "Sector": "Industrials",
+    "Price": 167.46,
+    "PriceChangeRate": 0.12,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "bded4064-ff1e-4595-bbfd-3685bfac1f7b",
+    "Symbol": "AOS",
+    "Name": "A.O. Smith Corp",
+    "Sector": "Industrials",
+    "Price": 103.23,
+    "PriceChangeRate": 0.16,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "24d9762e-a5ea-4eae-9c11-79a26b99230a",
+    "Symbol": "ABT",
+    "Name": "Abbott Laboratories",
+    "Sector": "HealthCare",
+    "Price": 272.64,
+    "PriceChangeRate": 0.6,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "1ec7954c-a0d3-43ff-9bd2-e6a7210021c7",
+    "Symbol": "ABBV",
+    "Name": "AbbVie Inc.",
+    "Sector": "HealthCare",
+    "Price": 282.6,
+    "PriceChangeRate": 0.13,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "3259d2c4-8b2d-4895-8e47-c0394096117c",
+    "Symbol": "ABMD",
+    "Name": "ABIOMED Inc",
+    "Sector": "HealthCare",
+    "Price": 30.94,
+    "PriceChangeRate": 0.15,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "ed49bc6d-0d0a-466f-9440-949c1b04884b",
+    "Symbol": "ACN",
+    "Name": "Accenture plc",
+    "Sector": "InformationTechnology",
+    "Price": 66.6,
+    "PriceChangeRate": 0.14,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "b3c6fe9c-9f96-40ca-9832-101fdeda29f6",
+    "Symbol": "ATVI",
+    "Name": "Activision Blizzard",
+    "Sector": "CommunicationServices",
+    "Price": 106.17,
+    "PriceChangeRate": 0.2,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "3ded2240-ce96-40bd-9712-2eebd4e9d3cb",
+    "Symbol": "ADBE",
+    "Name": "Adobe Inc.",
+    "Sector": "InformationTechnology",
+    "Price": 87.38,
+    "PriceChangeRate": 0.18,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "785d64b0-c193-4a8c-9da2-7c58d997a7e3",
+    "Symbol": "AAP",
+    "Name": "Advance Auto Parts",
+    "Sector": "ConsumerDiscretionary",
+    "Price": 100.3,
+    "PriceChangeRate": 0,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "07209625-1695-462b-bfd7-204bdd47696e",
+    "Symbol": "AMD",
+    "Name": "Advanced Micro Devices Inc",
+    "Sector": "InformationTechnology",
+    "Price": 88.15,
+    "PriceChangeRate": 0,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "c6834a6f-3386-452a-b297-7dc4c4d68e65",
+    "Symbol": "AES",
+    "Name": "AES Corp",
+    "Sector": "Utilities",
+    "Price": 107.62,
+    "PriceChangeRate": 0.1,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "8efd0398-98f2-4b39-b127-ba48d9ce76a6",
+    "Symbol": "AFL",
+    "Name": "AFLAC Inc",
+    "Sector": "Financials",
+    "Price": 210.61,
+    "PriceChangeRate": 0.1,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "ee1e16ee-09ad-4221-a2ca-febce7891afe",
+    "Symbol": "A",
+    "Name": "Agilent Technologies Inc",
+    "Sector": "HealthCare",
+    "Price": 278.81,
+    "PriceChangeRate": 0.13,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "f086ab5c-7af8-49b2-a610-e89d18c72730",
+    "Symbol": "APD",
+    "Name": "Air Products & Chemicals Inc",
+    "Sector": "Materials",
+    "Price": 150.34,
+    "PriceChangeRate": 0.13,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "30bf7aa9-2ded-452c-8d8d-0618be7caeb2",
+    "Symbol": "AKAM",
+    "Name": "Akamai Technologies Inc",
+    "Sector": "InformationTechnology",
+    "Price": 17.61,
+    "PriceChangeRate": 0.2,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "3adc02da-b06d-4efe-be37-6f83654e8e0f",
+    "Symbol": "ALK",
+    "Name": "Alaska Air Group Inc",
+    "Sector": "Industrials",
+    "Price": 217.8,
+    "PriceChangeRate": 0.4,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "b3663a74-d477-4fb7-b31e-d7a79fa81107",
+    "Symbol": "ARE",
+    "Name": "Alexandria RealEstate Equities",
+    "Sector": "RealEstate",
+    "Price": 237.16,
+    "PriceChangeRate": 0.15,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "01da1546-6ebb-460c-a564-02a4ea2d38ed",
+    "Symbol": "ALB",
+    "Name": "Albemarle Corp",
+    "Sector": "Materials",
+    "Price": 242.57,
+    "PriceChangeRate": 0.7,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "4c2a418f-605f-4ed0-a406-eb3ce3c62b56",
+    "Symbol": "ALXN",
+    "Name": "Alexion Pharmaceuticals",
+    "Sector": "HealthCare",
+    "Price": 74.89,
+    "PriceChangeRate": 0.3,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "81808030-85a3-4a99-951c-fd29b9d45c6c",
+    "Symbol": "ALGN",
+    "Name": "Align Technology",
+    "Sector": "HealthCare",
+    "Price": 110.11,
+    "PriceChangeRate": 0.3,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "259caec6-3627-4f0a-8a19-85a27b3313c8",
+    "Symbol": "ALLE",
+    "Name": "Allegion",
+    "Sector": "Industrials",
+    "Price": 116.43,
+    "PriceChangeRate": 0.8,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "84e1dd25-83f3-4923-b220-16b1dff73030",
+    "Symbol": "LNT",
+    "Name": "Alliant Energy Corp",
+    "Sector": "Utilities",
+    "Price": 88.98,
+    "PriceChangeRate": 0.19,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "61eab209-bb35-4ce5-9f76-1a5bed34294f",
+    "Symbol": "ALL",
+    "Name": "Allstate Corp",
+    "Sector": "Financials",
+    "Price": 85.67,
+    "PriceChangeRate": 0.17,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "04d6e0e1-d771-43ff-a5e1-83c5626f0932",
+    "Symbol": "GOOGL",
+    "Name": "Alphabet Inc. (Class A)",
+    "Sector": "CommunicationServices",
+    "Price": 78.33,
+    "PriceChangeRate": 0.2,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "298fdef4-0e66-4773-bbda-c5ae2c813b29",
+    "Symbol": "GOOG",
+    "Name": "Alphabet Inc. (Class C)",
+    "Sector": "CommunicationServices",
+    "Price": 49.84,
+    "PriceChangeRate": 0.12,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "f833a36e-47c9-475f-9687-20c842f3c951",
+    "Symbol": "MO",
+    "Name": "Altria Group Inc",
+    "Sector": "ConsumerStaples",
+    "Price": 86.29,
+    "PriceChangeRate": 0.9,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "1ba1b9be-4340-4ef1-b80a-9534f58963e5",
+    "Symbol": "AMZN",
+    "Name": "Amazon.com Inc.",
+    "Sector": "ConsumerDiscretionary",
+    "Price": 217.84,
+    "PriceChangeRate": 0.19,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "e2e65dae-6305-4993-a6ab-3f328ec18d38",
+    "Symbol": "AMCR",
+    "Name": "Amcor plc",
+    "Sector": "Materials",
+    "Price": 258.27,
+    "PriceChangeRate": 0.5,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "df3e0484-1c6e-40e9-a832-34efcb436a35",
+    "Symbol": "AEE",
+    "Name": "Ameren Corp",
+    "Sector": "Utilities",
+    "Price": 224.4,
+    "PriceChangeRate": 0.4,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "4d3d8110-aa0c-409f-9c0c-833b5264cd80",
+    "Symbol": "AAL",
+    "Name": "American Airlines Group",
+    "Sector": "Industrials",
+    "Price": 242.46,
+    "PriceChangeRate": 0,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "562354a7-dd38-4bd3-b1de-a302a30be840",
+    "Symbol": "AEP",
+    "Name": "American Electric Power",
+    "Sector": "Utilities",
+    "Price": 68.54,
+    "PriceChangeRate": 0.16,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "b7732aaa-cc0a-4835-9de2-34bf217fd8fe",
+    "Symbol": "AXP",
+    "Name": "American Express Co",
+    "Sector": "Financials",
+    "Price": 200.42,
+    "PriceChangeRate": 0.15,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "4b1efa6f-6179-434a-97d7-eb137862ed6a",
+    "Symbol": "AIG",
+    "Name": "American International Group",
+    "Sector": "Financials",
+    "Price": 89.72,
+    "PriceChangeRate": 0.17,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "b3f94e5f-0483-482c-9e3f-3d3005607541",
+    "Symbol": "AMT",
+    "Name": "American Tower Corp.",
+    "Sector": "RealEstate",
+    "Price": 68.13,
+    "PriceChangeRate": 0.14,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "b95a3dcf-a261-485e-bf30-9907e801bd87",
+    "Symbol": "AWK",
+    "Name": "American Water Works Company Inc",
+    "Sector": "Utilities",
+    "Price": 210.87,
+    "PriceChangeRate": 0.7,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "aaf3af35-135b-4121-8c08-6d069f968b44",
+    "Symbol": "AMP",
+    "Name": "Ameriprise Financial",
+    "Sector": "Financials",
+    "Price": 163.24,
+    "PriceChangeRate": 0.5,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "9ce52e3d-1041-473c-8c04-aaca3df72db2",
+    "Symbol": "ABC",
+    "Name": "AmerisourceBergen Corp",
+    "Sector": "HealthCare",
+    "Price": 14.34,
+    "PriceChangeRate": 0.15,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "6567c936-41fc-46c9-91c4-fe4324600ceb",
+    "Symbol": "AME",
+    "Name": "AMETEK Inc.",
+    "Sector": "Industrials",
+    "Price": 52.19,
+    "PriceChangeRate": 0,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "2d620af6-35a2-4b43-982c-df974303fbdb",
+    "Symbol": "AMGN",
+    "Name": "Amgen Inc.",
+    "Sector": "HealthCare",
+    "Price": 98.62,
+    "PriceChangeRate": 0,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "f168ba2f-639f-4351-9009-5f6647a354e9",
+    "Symbol": "APH",
+    "Name": "Amphenol Corp",
+    "Sector": "InformationTechnology",
+    "Price": 97.84,
+    "PriceChangeRate": 0.15,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "587894a5-b6da-4c7c-b1da-693bec121844",
+    "Symbol": "ADI",
+    "Name": "Analog Devices Inc.",
+    "Sector": "InformationTechnology",
+    "Price": 298.87,
+    "PriceChangeRate": 0.18,
+    "IsActive": "FALSE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "1bb39bf1-46af-44f1-9fcd-bc28e2f07946",
+    "Symbol": "ANSS",
+    "Name": "ANSYS",
+    "Sector": "InformationTechnology",
+    "Price": 49.22,
+    "PriceChangeRate": 0.3,
+    "IsActive": "FALSE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "547c9639-a696-4163-a937-22687f609931",
+    "Symbol": "ANTM",
+    "Name": "Anthem",
+    "Sector": "HealthCare",
+    "Price": 216.6,
+    "PriceChangeRate": 0.2,
+    "IsActive": "FALSE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "6b941de7-ba06-4857-afc2-47f5e211f0de",
+    "Symbol": "AON",
+    "Name": "Aon plc",
+    "Sector": "Financials",
+    "Price": 243.55,
+    "PriceChangeRate": 0.4,
+    "IsActive": "FALSE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "b7eb1a8f-166f-49b7-a38f-72d347e37236",
+    "Symbol": "APA",
+    "Name": "Apache Corporation",
+    "Sector": "Energy",
+    "Price": 95.95,
+    "PriceChangeRate": 0.14,
+    "IsActive": "FALSE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "da05a0b0-3da6-4b24-bfa9-ec8fb689993a",
+    "Symbol": "AIV",
+    "Name": "Apartment Investment & Management",
+    "Sector": "RealEstate",
+    "Price": 242.53,
+    "PriceChangeRate": 0.18,
+    "IsActive": "FALSE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "ad937653-0469-47c1-968c-5b1d35434c5a",
+    "Symbol": "AAPL",
+    "Name": "Apple Inc.",
+    "Sector": "InformationTechnology",
+    "Price": 26.97,
+    "PriceChangeRate": 0.3,
+    "IsActive": "FALSE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "0019b4ba-2235-45e5-880a-4d4ed1d4cc80",
+    "Symbol": "AMAT",
+    "Name": "Applied Materials Inc.",
+    "Sector": "InformationTechnology",
+    "Price": 61.26,
+    "PriceChangeRate": 0.1,
+    "IsActive": "FALSE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "3c4d05c7-912b-4150-a710-c8535c4b021a",
+    "Symbol": "APTV",
+    "Name": "Aptiv PLC",
+    "Sector": "ConsumerDiscretionary",
+    "Price": 37.71,
+    "PriceChangeRate": 0.1,
+    "IsActive": "FALSE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "5d66c245-d05e-4a67-beb7-c5cdd3b8302b",
+    "Symbol": "ADM",
+    "Name": "Archer-Daniels-Midland Co",
+    "Sector": "ConsumerStaples",
+    "Price": 235.26,
+    "PriceChangeRate": 0.5,
+    "IsActive": "FALSE",
+    "MetaData": {
+      "Country": "USA",
+      "Currency": "USD"
+    }
+  },
+  {
+    "Id": "64ef67de-a5f2-449a-a459-baee9a4375e0",
+    "Symbol": "ANET",
+    "Name": "Arista Networks",
+    "Sector": "InformationTechnology",
+    "Price": 271.45,
+    "PriceChangeRate": 0.11,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "e7cbec73-5212-43ec-a776-ead231771cac",
+    "Symbol": "AJG",
+    "Name": "Arthur J. Gallagher & Co.",
+    "Sector": "Financials",
+    "Price": 87.1,
+    "PriceChangeRate": 0.2,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "119b4c4b-7f2c-4e8c-825b-2c72fc4527e5",
+    "Symbol": "AIZ",
+    "Name": "Assurant",
+    "Sector": "Financials",
+    "Price": 92.74,
+    "PriceChangeRate": 0.14,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "1199a910-e11c-48e5-85c0-a19dba7219c0",
+    "Symbol": "T",
+    "Name": "AT&T Inc.",
+    "Sector": "CommunicationServices",
+    "Price": 163.91,
+    "PriceChangeRate": 0.1,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "d6961808-3898-4e9b-8cd4-4235ee0ba5fa",
+    "Symbol": "ATO",
+    "Name": "Atmos Energy",
+    "Sector": "Utilities",
+    "Price": 173.88,
+    "PriceChangeRate": 0.17,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "abb2350d-fe09-4461-b606-057c2e5b320d",
+    "Symbol": "ADSK",
+    "Name": "Autodesk Inc.",
+    "Sector": "InformationTechnology",
+    "Price": 283.84,
+    "PriceChangeRate": 0.14,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "8b6c8bba-0adb-46b9-9694-3de5554bffc6",
+    "Symbol": "ADP",
+    "Name": "Automatic Data Processing",
+    "Sector": "InformationTechnology",
+    "Price": 108.99,
+    "PriceChangeRate": 0.18,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "d0953aed-d3ab-4546-8947-35ec2755bdfc",
+    "Symbol": "AZO",
+    "Name": "AutoZone Inc",
+    "Sector": "ConsumerDiscretionary",
+    "Price": 123.14,
+    "PriceChangeRate": 0.18,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "bae792cb-7c75-48d8-8f40-083089678601",
+    "Symbol": "AVB",
+    "Name": "AvalonBay Communities",
+    "Sector": "RealEstate",
+    "Price": 118.46,
+    "PriceChangeRate": 0.5,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "b9176ff3-596e-4da4-80a4-01de98aa2a68",
+    "Symbol": "AVY",
+    "Name": "Avery Dennison Corp",
+    "Sector": "Materials",
+    "Price": 211.32,
+    "PriceChangeRate": 0.13,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "1b57c751-8317-4596-ba6f-6feff8c26a56",
+    "Symbol": "BKR",
+    "Name": "Baker Hughes Co",
+    "Sector": "Energy",
+    "Price": 229.16,
+    "PriceChangeRate": 0.6,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "b8d9531e-7da5-4951-afc1-1e5c74bcc568",
+    "Symbol": "BLL",
+    "Name": "Ball Corp",
+    "Sector": "Materials",
+    "Price": 300.5,
+    "PriceChangeRate": 0.14,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "0f561086-01d7-4663-90de-50c518f5c703",
+    "Symbol": "BAC",
+    "Name": "Bank of America Corp",
+    "Sector": "Financials",
+    "Price": 105.76,
+    "PriceChangeRate": 0.4,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "41020f0e-dbe7-4ccf-8cef-ada0c7b76a7b",
+    "Symbol": "BAX",
+    "Name": "Baxter International Inc.",
+    "Sector": "HealthCare",
+    "Price": 14.76,
+    "PriceChangeRate": 0.12,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "c7894f91-365b-4e28-9c14-abec20ce56ac",
+    "Symbol": "BDX",
+    "Name": "Becton Dickinson",
+    "Sector": "HealthCare",
+    "Price": 19.21,
+    "PriceChangeRate": 0.18,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "9882c51e-9708-4823-be0d-c8f2f1cdca82",
+    "Symbol": "BRK.B",
+    "Name": "Berkshire Hathaway",
+    "Sector": "Financials",
+    "Price": 154.81,
+    "PriceChangeRate": 0.13,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "617f1e99-0525-46d9-835b-7e5f4fc655bd",
+    "Symbol": "BBY",
+    "Name": "Best Buy Co. Inc.",
+    "Sector": "ConsumerDiscretionary",
+    "Price": 271.26,
+    "PriceChangeRate": 0.7,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "19e030bd-bba2-4ec0-954f-a5e9d1cd278d",
+    "Symbol": "BIO",
+    "Name": "Bio-Rad Laboratories",
+    "Sector": "HealthCare",
+    "Price": 266.78,
+    "PriceChangeRate": 0.2,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "e1f48f8e-63f3-4cc1-9fe3-d48cccc90d00",
+    "Symbol": "BIIB",
+    "Name": "Biogen Inc.",
+    "Sector": "HealthCare",
+    "Price": 24.81,
+    "PriceChangeRate": 0.18,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "26f74086-b225-4250-a4aa-65133ef8a464",
+    "Symbol": "BLK",
+    "Name": "BlackRock",
+    "Sector": "Financials",
+    "Price": 271.81,
+    "PriceChangeRate": 0.9,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "78070dfc-f589-460e-b3f1-8580cbea3226",
+    "Symbol": "BA",
+    "Name": "Boeing Company",
+    "Sector": "Industrials",
+    "Price": 252.66,
+    "PriceChangeRate": 0.14,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "3eefeeae-cd8b-489e-90b1-aee8d06417bb",
+    "Symbol": "BKNG",
+    "Name": "Booking Holdings Inc",
+    "Sector": "ConsumerDiscretionary",
+    "Price": 204.12,
+    "PriceChangeRate": 0.16,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "f31b42f8-2f62-49ea-98c0-5a982de47c38",
+    "Symbol": "BWA",
+    "Name": "BorgWarner",
+    "Sector": "ConsumerDiscretionary",
+    "Price": 112.99,
+    "PriceChangeRate": 0.16,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "8232368d-ef28-4abf-a39d-eda40887c5dd",
+    "Symbol": "BXP",
+    "Name": "Boston Properties",
+    "Sector": "RealEstate",
+    "Price": 161.35,
+    "PriceChangeRate": 0.6,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "fbd8029c-115d-4f5e-8f1c-ba9a698c9f5c",
+    "Symbol": "BSX",
+    "Name": "Boston Scientific",
+    "Sector": "HealthCare",
+    "Price": 225.32,
+    "PriceChangeRate": 0.1,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "de999756-3004-4cfb-b92f-88fbc644b3e2",
+    "Symbol": "BMY",
+    "Name": "Bristol-Myers Squibb",
+    "Sector": "HealthCare",
+    "Price": 74.33,
+    "PriceChangeRate": 0.19,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "bbe89319-355f-4e0b-94e0-39eae0200a28",
+    "Symbol": "AVGO",
+    "Name": "Broadcom Inc.",
+    "Sector": "InformationTechnology",
+    "Price": 136.8,
+    "PriceChangeRate": 0.6,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "71652b32-9ed0-494d-82f7-f12600ebdf30",
+    "Symbol": "BR",
+    "Name": "Broadridge Financial Solutions",
+    "Sector": "InformationTechnology",
+    "Price": 300.86,
+    "PriceChangeRate": 0.12,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "b1e7068b-f471-4f4b-a532-e4337bdd512a",
+    "Symbol": "BF.B",
+    "Name": "Brown-Forman Corp.",
+    "Sector": "ConsumerStaples",
+    "Price": 25.64,
+    "PriceChangeRate": 0.5,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "ee28b900-f25a-4155-a6d0-6226d7bc057d",
+    "Symbol": "CHRW",
+    "Name": "C. H. Robinson Worldwide",
+    "Sector": "Industrials",
+    "Price": 145.8,
+    "PriceChangeRate": 0.9,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "66d22ddb-11cf-4da3-95a9-c035c5b9d107",
+    "Symbol": "COG",
+    "Name": "Cabot Oil & Gas",
+    "Sector": "Energy",
+    "Price": 68.48,
+    "PriceChangeRate": 0.19,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "7b0fb7b3-c455-427d-9544-4e5f4630b544",
+    "Symbol": "CDNS",
+    "Name": "Cadence Design Systems",
+    "Sector": "InformationTechnology",
+    "Price": 216.54,
+    "PriceChangeRate": 0.6,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "e3c2643d-2afe-4493-babd-6a5c174e94e0",
+    "Symbol": "CPB",
+    "Name": "Campbell Soup",
+    "Sector": "ConsumerStaples",
+    "Price": 120.8,
+    "PriceChangeRate": 0.3,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "015d812e-d992-482b-bc3f-295309f4703b",
+    "Symbol": "COF",
+    "Name": "Capital One Financial",
+    "Sector": "Financials",
+    "Price": 160.18,
+    "PriceChangeRate": 0.13,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "ac6397e7-d665-441d-b66a-8493836f6e65",
+    "Symbol": "CAH",
+    "Name": "Cardinal Health Inc.",
+    "Sector": "HealthCare",
+    "Price": 165.16,
+    "PriceChangeRate": 0.13,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "b69ecaff-10e2-40c9-ba29-3cf5bd3d35c3",
+    "Symbol": "KMX",
+    "Name": "Carmax Inc",
+    "Sector": "ConsumerDiscretionary",
+    "Price": 69.75,
+    "PriceChangeRate": 0.14,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "e70482a1-5c2e-4bc2-986d-68566fb0a64c",
+    "Symbol": "CCL",
+    "Name": "Carnival Corp.",
+    "Sector": "ConsumerDiscretionary",
+    "Price": 73.99,
+    "PriceChangeRate": 0.14,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "57851735-4aa1-42cd-be67-5749cf03ce0e",
+    "Symbol": "CARR",
+    "Name": "Carrier Global",
+    "Sector": "Industrials",
+    "Price": 193.54,
+    "PriceChangeRate": 0.2,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "721e497a-db9c-4e1b-9a5c-52e5051cce2e",
+    "Symbol": "CAT",
+    "Name": "Caterpillar Inc.",
+    "Sector": "Industrials",
+    "Price": 46.7,
+    "PriceChangeRate": 0.18,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "dcbda19e-1ee7-43cd-a276-a24cd52dede9",
+    "Symbol": "CBOE",
+    "Name": "Cboe Global Markets",
+    "Sector": "Financials",
+    "Price": 278.92,
+    "PriceChangeRate": 0.14,
+    "IsActive": "TRUE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "4a899ea9-188d-4fe6-943a-a17a1cf36746",
+    "Symbol": "CBRE",
+    "Name": "CBRE Group",
+    "Sector": "RealEstate",
+    "Price": 119.15,
+    "PriceChangeRate": 0.7,
+    "IsActive": "FALSE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "13713d04-c8fc-4886-96e7-2f93c20001b4",
+    "Symbol": "CDW",
+    "Name": "CDW",
+    "Sector": "InformationTechnology",
+    "Price": 239.43,
+    "PriceChangeRate": 0.17,
+    "IsActive": "FALSE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "689411bc-1e82-4cfc-b25a-6a4c410904b3",
+    "Symbol": "CE",
+    "Name": "Celanese",
+    "Sector": "Materials",
+    "Price": 271.71,
+    "PriceChangeRate": 0.1,
+    "IsActive": "FALSE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "c7d06335-5cae-4c09-856d-449e4b420ec0",
+    "Symbol": "CNC",
+    "Name": "Centene Corporation",
+    "Sector": "HealthCare",
+    "Price": 92.27,
+    "PriceChangeRate": 0.16,
+    "IsActive": "FALSE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "9899ddff-2c17-428a-b634-c57ab1d29ce3",
+    "Symbol": "CNP",
+    "Name": "CenterPoint Energy",
+    "Sector": "Utilities",
+    "Price": 12.26,
+    "PriceChangeRate": 0.17,
+    "IsActive": "FALSE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "fa9851d0-8964-41f2-90b4-ebd1d07d8811",
+    "Symbol": "CTL",
+    "Name": "CenturyLink Inc",
+    "Sector": "CommunicationServices",
+    "Price": 281.2,
+    "PriceChangeRate": 0.1,
+    "IsActive": "FALSE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "80b32581-16b3-463a-85a5-6c6b3ab47584",
+    "Symbol": "CERN",
+    "Name": "Cerner",
+    "Sector": "HealthCare",
+    "Price": 106.28,
+    "PriceChangeRate": 0.15,
+    "IsActive": "FALSE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "8e71f6c7-25a5-428b-abd3-b09bdaa75f34",
+    "Symbol": "CF",
+    "Name": "CF Industries Holdings Inc",
+    "Sector": "Materials",
+    "Price": 281.5,
+    "PriceChangeRate": 0.8,
+    "IsActive": "FALSE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "8ec5de7a-d742-4b11-abbe-c2bd30c6d020",
+    "Symbol": "SCHW",
+    "Name": "Charles Schwab Corporation",
+    "Sector": "Financials",
+    "Price": 237.43,
+    "PriceChangeRate": 0.17,
+    "IsActive": "FALSE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  },
+  {
+    "Id": "b584540c-574b-48e7-a630-31e936ba4157",
+    "Symbol": "CHTR",
+    "Name": "Charter Communications",
+    "Sector": "CommunicationServices",
+    "Price": 233.64,
+    "PriceChangeRate": 0.7,
+    "IsActive": "FALSE",
+    "MetaData": {
+      "Country": "GERMANY",
+      "Currency": "EUR"
+    }
+  }
+]
