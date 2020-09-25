@@ -12,19 +12,15 @@ namespace StackExchange.Redis.Branch.Repository
         Task<bool> DeleteAsync(T entity);
         Task<bool> DeleteAsync(string id);
         Task<T> GetByIdAsync(string id);
-        Task<IEnumerable<T>> GetByBranchAsync(string branchId, params string[] groups);
-        Task<IEnumerable<T>> GetBySortedBranchAsync(string branchId, params string[] groups);
-        Task<IEnumerable<T>> GetBySortedBranchAsync(string branchId, long from, params string[] groups);
-        Task<IEnumerable<T>> GetBySortedBranchAsync(string branchId, long from, long to, params string[] groups);
-        Task<IEnumerable<T>> GetBySortedBranchAsync(string branchId, long from, long to, long skip, long take, params string[] groups);
-        Task<long> CountByBranchAsync(string branchId, params string[] groups);
-        Task<long> CountBySortedBranchAsync(string branchId, params string[] groups);
-        Task<long> CountBySortedBranchAsync(string branchId, long from, params string[] groups);
-        Task<long> CountBySortedBranchAsync(string branchId, long from, long to, params string[] groups);
+        Task<IEnumerable<T>> GetAsync(string branchId, params string[] groups);
+        Task<IEnumerable<T>> GetAsync(string branchId, double from, params string[] groups);
+        Task<IEnumerable<T>> GetAsync(string branchId, double from, double to, params string[] groups);
+        Task<IEnumerable<T>> GetAsync(string branchId, double from, double to, long skip, long take, params string[] groups);
+        Task<long> CountAsync(string branchId, params string[] groups);
+        Task<long> CountAsync(string branchId, double from, params string[] groups);
+        Task<long> CountAsync(string branchId, double from, double to, params string[] groups);
         void CreateBranches();
         void AddBranch(IBranch<T> branch);
-        Task<bool> SetKeyExpireAsync(string id, TimeSpan timeSpan);
-        Task<bool> SetKeyExpireAsync(T entity, TimeSpan timeSpan);
         IEnumerable<string> GetBranches();
     }
 }

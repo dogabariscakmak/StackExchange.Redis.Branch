@@ -67,7 +67,7 @@ namespace StackExchange.Redis.Branch.UnitTest
             //Act
             StockEntity teslaEntity = new StockEntity("TESLA", StockSector.Technology, 229.00, 12.5);
             await stubStockRepository.AddAsync(teslaEntity);
-            IEnumerable<StockEntity> expectedEntities = await stubStockRepository.GetByBranchAsync("BRANCH_SECTOR", "Technology");
+            IEnumerable<StockEntity> expectedEntities = await stubStockRepository.GetAsync("BRANCH_SECTOR", "Technology");
 
             //Assert 
             Assert.Single(expectedEntities);
@@ -98,7 +98,7 @@ namespace StackExchange.Redis.Branch.UnitTest
             await stubStockRepository.AddAsync(microsoftEntity);
             StockEntity appleEntity = new StockEntity("APPLE", StockSector.Technology, 294.21, 8.5);
             await stubStockRepository.AddAsync(appleEntity);
-            long actualCount = await stubStockRepository.CountByBranchAsync("BRANCH_SECTOR", "Technology");
+            long actualCount = await stubStockRepository.CountAsync("BRANCH_SECTOR", "Technology");
 
             //Assert 
             Assert.Equal(3, actualCount);
@@ -123,7 +123,7 @@ namespace StackExchange.Redis.Branch.UnitTest
             StockEntity appleEntity = new StockEntity("APPLE", StockSector.Technology, 294.21, 8.5);
             await stubStockRepository.AddAsync(appleEntity);
 
-            IEnumerable<StockEntity> expectedEntities = await stubStockRepository.GetBySortedBranchAsync("BRANCH_SORT_PRICE_CHANGE_RATE", (long)9.5);
+            IEnumerable<StockEntity> expectedEntities = await stubStockRepository.GetAsync("BRANCH_SORT_PRICE_CHANGE_RATE", (long)9.5);
 
             //Assert 
             Assert.Equal(2, expectedEntities.Count());
@@ -165,7 +165,7 @@ namespace StackExchange.Redis.Branch.UnitTest
             StockEntity appleEntity = new StockEntity("APPLE", StockSector.Technology, 294.21, 8.5);
             await stubStockRepository.AddAsync(appleEntity);
 
-            long actualCount = await stubStockRepository.CountBySortedBranchAsync("BRANCH_SECTOR_SORT_PRICE", 210, 250, "Technology");
+            long actualCount = await stubStockRepository.CountAsync("BRANCH_SECTOR_SORT_PRICE", 210, 250, "Technology");
 
             //Assert 
             Assert.Equal(1, actualCount);
@@ -191,7 +191,7 @@ namespace StackExchange.Redis.Branch.UnitTest
             StockEntity appleEntity = new StockEntity("APPLE", StockSector.Technology, 294.21, 8.5);
             await stubStockRepository.AddAsync(appleEntity);
 
-            IEnumerable<StockEntity> expectedEntities = await stubStockRepository.GetBySortedBranchAsync("BRANCH_SECTOR_SORT_CREATED_DATETIME", DateTimeOffset.UtcNow.AddSeconds(-10).Ticks, StockSector.Technology.ToString());
+            IEnumerable<StockEntity> expectedEntities = await stubStockRepository.GetAsync("BRANCH_SECTOR_SORT_CREATED_DATETIME", DateTimeOffset.UtcNow.AddSeconds(-10).Ticks, StockSector.Technology.ToString());
 
             //Assert 
             Assert.Equal(2, expectedEntities.Count());
@@ -234,9 +234,9 @@ namespace StackExchange.Redis.Branch.UnitTest
             StockEntity appleEntity = new StockEntity("APPLE", StockSector.Technology, 294.21, -0.5);
             await stubStockRepository.AddAsync(appleEntity);
 
-            IEnumerable<StockEntity> expectedGreatProfitEntities = await stubStockRepository.GetBySortedBranchAsync("BRANCH_PROFIT_LEVEL_SORT_PRICE_RATE", "GreatProfit");
-            IEnumerable<StockEntity> expectedProfitEntities = await stubStockRepository.GetBySortedBranchAsync("BRANCH_PROFIT_LEVEL_SORT_PRICE_RATE", "NormalProfit");
-            IEnumerable<StockEntity> expectedLossProfitEntities = await stubStockRepository.GetBySortedBranchAsync("BRANCH_PROFIT_LEVEL_SORT_PRICE_RATE", "Loss");
+            IEnumerable<StockEntity> expectedGreatProfitEntities = await stubStockRepository.GetAsync("BRANCH_PROFIT_LEVEL_SORT_PRICE_RATE", "GreatProfit");
+            IEnumerable<StockEntity> expectedProfitEntities = await stubStockRepository.GetAsync("BRANCH_PROFIT_LEVEL_SORT_PRICE_RATE", "NormalProfit");
+            IEnumerable<StockEntity> expectedLossProfitEntities = await stubStockRepository.GetAsync("BRANCH_PROFIT_LEVEL_SORT_PRICE_RATE", "Loss");
 
             //Assert 
             Assert.Equal(2, expectedGreatProfitEntities.Count());
@@ -342,116 +342,6 @@ namespace StackExchange.Redis.Branch.UnitTest
         }
 
         [Fact]
-        public async void AddSetKeyExpirationForKeyGetEntity_AddEnttiy_ReturnEntityById()
-        {
-            //Arrange 
-            StockRepository stubStockRepository = FakesFactory.CreateStockRepositoryFake();
-
-            IBranch<StockEntity> sectorBranch = new RedisBranch<StockEntity>();
-            sectorBranch.SetBranchId("BRANCH_SECTOR");
-            sectorBranch.FilterBy(i => i.IsActive).GroupBy("Sector");
-            stubStockRepository.AddBranch(sectorBranch);
-
-            //Act
-            StockEntity teslaEntity = new StockEntity("TESLA", StockSector.Technology, 229.00, 12.5);
-            await stubStockRepository.AddAsync(teslaEntity);
-            StockEntity amazonEntity = new StockEntity("AMAZON", StockSector.Technology, 329.00, 11.5);
-            await stubStockRepository.AddAsync(amazonEntity);
-
-            await stubStockRepository.SetKeyExpireAsync(teslaEntity.Id, new TimeSpan(0, 0, 1));
-
-            Thread.Sleep(1000 * 2);
-
-            StockEntity expectedNullEntity = await stubStockRepository.GetByIdAsync(teslaEntity.Id);
-            StockEntity expectedAmazonEntity = await stubStockRepository.GetByIdAsync(amazonEntity.Id);
-
-            //Assert 
-            Assert.Null(expectedNullEntity);
-
-            Assert.NotNull(expectedAmazonEntity);
-
-            Assert.Equal(expectedAmazonEntity.Id, amazonEntity.Id);
-            Assert.Equal(expectedAmazonEntity.Name, amazonEntity.Name);
-            Assert.Equal(expectedAmazonEntity.Sector, amazonEntity.Sector);
-            Assert.Equal(expectedAmazonEntity.Price, amazonEntity.Price);
-            Assert.Equal(expectedAmazonEntity.PriceChangeRate, amazonEntity.PriceChangeRate);
-            Assert.Equal(expectedAmazonEntity.CreatedDateTime, amazonEntity.CreatedDateTime);
-            Assert.Equal(expectedAmazonEntity.IsActive, amazonEntity.IsActive);
-        }
-
-        [Fact]
-        public async void AddSetKeyExpirationForKeyGetEntity_AddEnttiy_ReturnEntityByPropertyGroupBranch()
-        {
-            //Arrange 
-            StockRepository stubStockRepository = FakesFactory.CreateStockRepositoryFake();
-
-            IBranch<StockEntity> sectorBranch = new RedisBranch<StockEntity>();
-            sectorBranch.SetBranchId("BRANCH_SECTOR");
-            sectorBranch.FilterBy(i => i.IsActive).GroupBy("Sector");
-            stubStockRepository.AddBranch(sectorBranch);
-
-            //Act
-            StockEntity teslaEntity = new StockEntity("TESLA", StockSector.Technology, 229.00, 12.5);
-            await stubStockRepository.AddAsync(teslaEntity);
-            StockEntity amazonEntity = new StockEntity("AMAZON", StockSector.Technology, 329.00, 11.5);
-            await stubStockRepository.AddAsync(amazonEntity);
-
-            await stubStockRepository.SetKeyExpireAsync(teslaEntity.Id, new TimeSpan(0, 0, 1));
-
-            Thread.Sleep(1000 * 2);
-
-            IEnumerable<StockEntity> expectedEntites = await stubStockRepository.GetByBranchAsync("BRANCH_SECTOR", StockSector.Technology.ToString());
-
-
-            //Assert 
-            Assert.Single(expectedEntites);
-
-            Assert.Equal(expectedEntites.ElementAt(0).Id, amazonEntity.Id);
-            Assert.Equal(expectedEntites.ElementAt(0).Name, amazonEntity.Name);
-            Assert.Equal(expectedEntites.ElementAt(0).Sector, amazonEntity.Sector);
-            Assert.Equal(expectedEntites.ElementAt(0).Price, amazonEntity.Price);
-            Assert.Equal(expectedEntites.ElementAt(0).PriceChangeRate, amazonEntity.PriceChangeRate);
-            Assert.Equal(expectedEntites.ElementAt(0).CreatedDateTime, amazonEntity.CreatedDateTime);
-            Assert.Equal(expectedEntites.ElementAt(0).IsActive, amazonEntity.IsActive);
-        }
-
-        [Fact]
-        public async void AddSetKeyExpirationForEntityGetEntity_AddEnttiy_ReturnEntityByPropertyGroupBranch()
-        {
-            //Arrange 
-            StockRepository stubStockRepository = FakesFactory.CreateStockRepositoryFake();
-
-            IBranch<StockEntity> sectorBranch = new RedisBranch<StockEntity>();
-            sectorBranch.SetBranchId("BRANCH_SECTOR");
-            sectorBranch.FilterBy(i => i.IsActive).GroupBy("Sector");
-            stubStockRepository.AddBranch(sectorBranch);
-
-            //Act
-            StockEntity teslaEntity = new StockEntity("TESLA", StockSector.Technology, 229.00, 12.5);
-            await stubStockRepository.AddAsync(teslaEntity);
-            StockEntity amazonEntity = new StockEntity("AMAZON", StockSector.Technology, 329.00, 11.5);
-            await stubStockRepository.AddAsync(amazonEntity);
-
-            await stubStockRepository.SetKeyExpireAsync(teslaEntity, new TimeSpan(0, 0, 1));
-
-            Thread.Sleep(1000 * 2);
-
-            IEnumerable<StockEntity> expectedEntites = await stubStockRepository.GetByBranchAsync("BRANCH_SECTOR", StockSector.Technology.ToString());
-
-
-            //Assert 
-            Assert.Single(expectedEntites);
-
-            Assert.Equal(expectedEntites.ElementAt(0).Id, amazonEntity.Id);
-            Assert.Equal(expectedEntites.ElementAt(0).Name, amazonEntity.Name);
-            Assert.Equal(expectedEntites.ElementAt(0).Sector, amazonEntity.Sector);
-            Assert.Equal(expectedEntites.ElementAt(0).Price, amazonEntity.Price);
-            Assert.Equal(expectedEntites.ElementAt(0).PriceChangeRate, amazonEntity.PriceChangeRate);
-            Assert.Equal(expectedEntites.ElementAt(0).CreatedDateTime, amazonEntity.CreatedDateTime);
-            Assert.Equal(expectedEntites.ElementAt(0).IsActive, amazonEntity.IsActive);
-        }
-
-        [Fact]
         public async void AddUpdateGetEntity_AddUpdateEntiy_ReturnEntityByIdWithUpdatedValues()
         {
             //Arrange 
@@ -549,7 +439,7 @@ namespace StackExchange.Redis.Branch.UnitTest
             //Act
             StockEntity teslaEntity = new StockEntity("TESLA", StockSector.Technology, 229.00, 12.5);
             await stubStockRepository.AddAsync(teslaEntity);
-            Func<Task> act  = async () => await stubStockRepository.GetByBranchAsync("NotExist", "");
+            Func<Task> act  = async () => await stubStockRepository.GetAsync("NotExist", "");
 
             //Assert 
             KeyNotFoundException exception = await Assert.ThrowsAsync<KeyNotFoundException>(act);
@@ -570,7 +460,7 @@ namespace StackExchange.Redis.Branch.UnitTest
             //Act
             StockEntity teslaEntity = new StockEntity("TESLA", StockSector.Technology, 229.00, 12.5);
             await stubStockRepository.AddAsync(teslaEntity);
-            Func<Task> act = async () => await stubStockRepository.GetByBranchAsync("NotExist", "");
+            Func<Task> act = async () => await stubStockRepository.GetAsync("NotExist", "");
 
             //Assert 
             KeyNotFoundException exception = await Assert.ThrowsAsync<KeyNotFoundException>(act);
@@ -591,7 +481,7 @@ namespace StackExchange.Redis.Branch.UnitTest
             //Act
             StockEntity teslaEntity = new StockEntity("TESLA", StockSector.Technology, 229.00, 12.5);
             await stubStockRepository.AddAsync(teslaEntity);
-            Func<Task> act = async () => await stubStockRepository.CountByBranchAsync("NotExist", "");
+            Func<Task> act = async () => await stubStockRepository.CountAsync("NotExist", "");
 
             //Assert 
             KeyNotFoundException exception = await Assert.ThrowsAsync<KeyNotFoundException>(act);
@@ -612,7 +502,7 @@ namespace StackExchange.Redis.Branch.UnitTest
             //Act
             StockEntity teslaEntity = new StockEntity("TESLA", StockSector.Technology, 229.00, 12.5);
             await stubStockRepository.AddAsync(teslaEntity);
-            Func<Task> act = async () => await stubStockRepository.CountByBranchAsync("NotExist", "");
+            Func<Task> act = async () => await stubStockRepository.CountAsync("NotExist", "");
 
             //Assert 
             KeyNotFoundException exception = await Assert.ThrowsAsync<KeyNotFoundException>(act);

@@ -19,6 +19,10 @@ namespace StackExchange.Redis.Branch.Repository
         private List<IBranch<T>> _branches;
         protected IReadOnlyCollection<IBranch<T>> Branches => _branches?.AsReadOnly();
 
+        /// <summary>
+        /// Since RedisRepository is dependent on StackExchange.Redis ConnectionMultiplexer must be provided.
+        /// </summary>
+        /// <param name="redisConnectionMultiplexer">IConnectionMultiplexer from StackExchange.Redis</param>
         public RedisRepositoryBase(IConnectionMultiplexer redisConnectionMultiplexer)
         {
             _redisConnectionMultiplexer = redisConnectionMultiplexer;
@@ -33,75 +37,19 @@ namespace StackExchange.Redis.Branch.Repository
         }
 
         /// <summary>
-        /// Adds entity to redis and updates branches.
+        /// Private helper method to get sorted branch items.
         /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public virtual async Task AddAsync(T entity)
+        /// <param name="branch">Sorted Branch to query</param>
+        /// <param name="from">Elements have score from</param>
+        /// <param name="to">Elements have score to</param>
+        /// <param name="skip">Skip elements</param>
+        /// <param name="take">Take elements</param>
+        /// <param name="groups">Groups values to be filtered</param>
+        /// <returns>Filtered items</returns>
+        private async Task<IEnumerable<T>> GetSortedAsync(IBranch<T> branch, double from, double to, long skip, long take, params string[] groups)
         {
-            await _redisDatabase.HashSetAsync(entity).ConfigureAwait(false);
-            await UpdateBranchesAsync(entity, RedisEntityStateEnum.Added).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Updates entity to redis and updates branches.
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public virtual async Task UpdateAsync(T entity)
-        {
-            await _redisDatabase.HashSetAsync(entity).ConfigureAwait(false);
-            await UpdateBranchesAsync(entity, RedisEntityStateEnum.Updated).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Deletes entity and updates branches.
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public virtual async Task<bool> DeleteAsync(T entity)
-        {
-            bool result = await _redisDatabase.KeyDeleteAsync(entity.GetRedisKey()).ConfigureAwait(false);
-            await UpdateBranchesAsync(entity, RedisEntityStateEnum.Deleted).ConfigureAwait(false);
-            return result;
-        }
-
-        /// <summary>
-        /// Deletes entity and updates branches.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public virtual async Task<bool> DeleteAsync(string id)
-        {
-            T entity = await GetByIdAsync(id).ConfigureAwait(false);
-            bool result = false;
-            if (entity != default)
-            {
-                result = await _redisDatabase.KeyDeleteAsync(entity.GetRedisKey()).ConfigureAwait(false);
-                await UpdateBranchesAsync(entity, RedisEntityStateEnum.Deleted).ConfigureAwait(false);
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Get all entity in branch by branchId.
-        /// </summary>
-        /// <param name="branchId">Id to identify branch.</param>
-        /// <param name="groups">Groups parameters.</param>
-        /// <returns></returns>
-        public virtual async Task<IEnumerable<T>> GetByBranchAsync(string branchId, params string[] groups)
-        {
-            IBranch<T> branch = _branches.Find(b => b.GetBranchId() == branchId);
-            if (branch == default)
-            {
-                throw new KeyNotFoundException($"branchId not found: {branchId}. Possible branches: {String.Join(", ", _branches.Select(i => i.GetBranchKey()))}");
-            }
-
-            string branchKey = branch.GetBranchKey(groups);
-
             List<T> resultList = new List<T>();
-
-            RedisValue[] ids = await _redisDatabase.SetMembersAsync(branchKey).ConfigureAwait(false);
+            RedisValue[] ids = await _redisDatabase.SortedSetRangeByScoreAsync(branch.GetBranchKey(groups), from, to, Exclude.None, Order.Ascending, skip, take).ConfigureAwait(false);
             foreach (RedisValue id in ids)
             {
                 resultList.Add((await _redisDatabase.HashGetAllAsync($"{typeof(T).Name}:data:{id}").ConfigureAwait(false)).ConvertFromHashEntryList<T>());
@@ -110,184 +58,23 @@ namespace StackExchange.Redis.Branch.Repository
         }
 
         /// <summary>
-        /// Get entity by id.
+        /// Private helper method to get entity counts in the sorted branch.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public virtual async Task<T> GetByIdAsync(string id)
+        /// <param name="branch">Sorted Branch to query</param>
+        /// <param name="from">Elements have score from</param>
+        /// <param name="to">Elements have score to</param>
+        /// <param name="groups">Groups values to be filtered</param>
+        /// <returns>Counts of filtered items.</returns>
+        private async Task<long> CountSortedAsync(IBranch<T> branch, double from, double to, params string[] groups)
         {
-            IBranch<T> dataBranch = _branches.Find(i => i.GetBranchId() == BRANCH_DATA);
-            if (dataBranch == default)
-            {
-                throw new KeyNotFoundException("Data Branch not found.");
-            }
-            string redisKey = dataBranch.GetBranchKey().Replace("{propertyValue}", id);
-            HashEntry[] hashSet = (await _redisDatabase.HashGetAllAsync(redisKey).ConfigureAwait(false));
-            return hashSet.Length == 0 ? null : hashSet.ConvertFromHashEntryList<T>();
+            return await _redisDatabase.SortedSetLengthAsync(branch.GetBranchKey(groups), from, to).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Get all entity in sorted branch by branchId.
+        /// Private helper method to update branches according to entity state and entity.
         /// </summary>
-        /// <param name="branchId">Id to identify branch.</param>
-        /// <param name="groups">Groups parameters.</param>
-        /// <returns></returns>
-        public virtual async Task<IEnumerable<T>> GetBySortedBranchAsync(string branchId, params string[] groups)
-        {
-            return await GetBySortedBranchAsync(branchId, long.MinValue, long.MaxValue, groups).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Get all entity in sorted branch by branchId.
-        /// </summary>
-        /// <param name="branchId">Id to identify branch.</param>
-        /// <param name="from">Score from.</param>
-        /// <param name="groups">Groups parameters.</param>
-        /// <returns></returns>
-        public virtual async Task<IEnumerable<T>> GetBySortedBranchAsync(string branchId, long from, params string[] groups)
-        {
-            return await GetBySortedBranchAsync(branchId, from, long.MaxValue, groups);
-        }
-
-        /// <summary>
-        /// Get all entity in sorted branch by branchId.
-        /// </summary>
-        /// <param name="branchId">Id to identify branch.</param>
-        /// <param name="from">Score from.</param>
-        /// <param name="to">Score to.</param>
-        /// <param name="groups">Groups parameters.</param>
-        /// <returns></returns>
-        public virtual async Task<IEnumerable<T>> GetBySortedBranchAsync(string branchId, long from, long to, params string[] groups)
-        {
-            IBranch<T> branch = _branches.Find(b => b.GetBranchId() == branchId);
-            if (branch == default)
-            {
-                throw new KeyNotFoundException($"branchId not found: {branchId}. Possible branches: {String.Join(", ", _branches.Select(i => i.GetBranchKey()))}");
-            }
-
-            string branchKey = branch.GetBranchKey(groups);
-            List<T> resultList = new List<T>();
-            RedisValue[] ids = await _redisDatabase.SortedSetRangeByScoreAsync(branchKey, from, to).ConfigureAwait(false);
-            foreach (RedisValue id in ids)
-            {
-                resultList.Add((await _redisDatabase.HashGetAllAsync($"{typeof(T).Name}:data:{id}").ConfigureAwait(false)).ConvertFromHashEntryList<T>());
-            }
-            return resultList;
-        }
-
-        /// <summary>
-        /// Get all entity in sorted branch by branchId.
-        /// </summary>
-        /// <param name="branchId">Id to identify branch.</param>
-        /// <param name="from">Score from.</param>
-        /// <param name="to">Score to.</param>
-        /// <param name="skip">skip parameters.</param>
-        /// <param name="take">take parameters.</param>
-        /// <param name="groups">Groups parameters.</param>
-        /// <returns></returns>
-        public virtual async Task<IEnumerable<T>> GetBySortedBranchAsync(string branchId, long from, long to, long skip, long take, params string[] groups)
-        {
-            IBranch<T> branch = _branches.Find(b => b.GetBranchId() == branchId);
-            if (branch == default)
-            {
-                throw new KeyNotFoundException($"branchId not found: {branchId}. Possible branches: {String.Join(", ", _branches.Select(i => i.GetBranchKey()))}");
-            }
-
-            string branchKey = branch.GetBranchKey(groups);
-            List<T> resultList = new List<T>();
-            RedisValue[] ids = await _redisDatabase.SortedSetRangeByScoreAsync(branchKey, from, to, Exclude.None, Order.Ascending, skip, take).ConfigureAwait(false);
-            foreach (RedisValue id in ids)
-            {
-                resultList.Add((await _redisDatabase.HashGetAllAsync($"{typeof(T).Name}:data:{id}").ConfigureAwait(false)).ConvertFromHashEntryList<T>());
-            }
-            return resultList;
-        }
-
-        /// <summary>
-        /// Get entity counts in the branch.
-        /// </summary>
-        /// <param name="branchId">Id to identify branch.</param>
-        /// <param name="groups">Groups parameters.</param>
-        /// <returns></returns>
-        public async Task<long> CountByBranchAsync(string branchId, params string[] groups)
-        {
-            IBranch<T> branch = _branches.Find(b => b.GetBranchId() == branchId);
-            if (branch == default)
-            {
-                throw new KeyNotFoundException($"branchId not found: {branchId}. Possible branches: {String.Join(", ", _branches.Select(i => i.GetBranchKey()))}");
-            }
-
-            string branchKey = branch.GetBranchKey(groups);
-
-            return await _redisDatabase.SetLengthAsync(branchKey).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Get entity counts in the branch.
-        /// </summary>
-        /// <param name="branchId">Id to identify branch.</param>
-        /// <param name="groups">Groups parameters.</param>
-        /// <returns></returns>
-        public async Task<long> CountBySortedBranchAsync(string branchId, params string[] groups)
-        {
-            return await CountBySortedBranchAsync(branchId, long.MinValue, long.MaxValue, groups).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Get entity counts in the branch.
-        /// </summary>
-        /// <param name="branchId">Id to identify branch.</param>
-        /// <param name="from">Score from.</param>
-        /// <param name="groups">Groups parameters.</param>
-        /// <returns></returns>
-        public async Task<long> CountBySortedBranchAsync(string branchId, long from, params string[] groups)
-        {
-            return await CountBySortedBranchAsync(branchId, from, long.MaxValue, groups).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Get entity counts in the branch.
-        /// </summary>
-        /// <param name="branchId">Id to identify branch.</param>
-        /// <param name="from">Score from.</param>
-        /// <param name="to">Score to.</param>
-        /// <param name="groups">Groups parameters.</param>
-        /// <returns></returns>
-        public async Task<long> CountBySortedBranchAsync(string branchId, long from, long to, params string[] groups)
-        {
-            IBranch<T> branch = _branches.Find(b => b.GetBranchId() == branchId);
-            if (branch == default)
-            {
-                throw new KeyNotFoundException($"branchId not found: {branchId}. Possible branches: {String.Join(", ", _branches.Select(i => i.GetBranchKey()))}");
-            }
-
-            var branchKey = branch.GetBranchKey(groups);
-
-            return await _redisDatabase.SortedSetLengthAsync(branchKey, from, to).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Adds branch.
-        /// </summary>
-        /// <param name="branch"></param>
-        public void AddBranch(IBranch<T> branch)
-        {
-            if (string.IsNullOrEmpty(branch.GetBranchId()))
-            {
-                throw new ArgumentException($"BranchId must be set. branch.SetBranchId(string branchId)");
-            }
-            if (branch.GetEntityType() == default)
-            {
-                throw new ArgumentException($"EntityType must be set. branch.SetEntityType(RedisEntity entity);");
-            }
-            _branches.Add(branch);
-        }
-
-        /// <summary>
-        /// Updates branches according to event type and entity.
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <param name="eventType"></param>
+        /// <param name="entity">Entity of repository</param>
+        /// <param name="entityState">RedisEntityStateEnum</param>
         /// <returns></returns>
         private async Task UpdateBranchesAsync(T entity, RedisEntityStateEnum entityState)
         {
@@ -342,63 +129,281 @@ namespace StackExchange.Redis.Branch.Repository
         }
 
         /// <summary>
+        /// Adds entity to redis and updates branches. When you override this method do not forget to call base class method.
+        /// </summary>
+        /// <param name="entity">Entity of repository</param>
+        public virtual async Task AddAsync(T entity)
+        {
+            await _redisDatabase.HashSetAsync(entity).ConfigureAwait(false);
+            await UpdateBranchesAsync(entity, RedisEntityStateEnum.Added).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Updates entity to redis and updates branches. When you override this method do not forget to call base class method.
+        /// </summary>
+        /// <param name="entity">Entity of repository</param>
+        public virtual async Task UpdateAsync(T entity)
+        {
+            await _redisDatabase.HashSetAsync(entity).ConfigureAwait(false);
+            await UpdateBranchesAsync(entity, RedisEntityStateEnum.Updated).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Deletes entity and updates branches.
+        /// </summary>
+        /// <param name="entity">Entity of repository</param>
+        /// <returns>True if entity deleted.</returns>
+        public virtual async Task<bool> DeleteAsync(T entity)
+        {
+            bool result = await _redisDatabase.KeyDeleteAsync(entity.GetRedisKey()).ConfigureAwait(false);
+            await UpdateBranchesAsync(entity, RedisEntityStateEnum.Deleted).ConfigureAwait(false);
+            return result;
+        }
+
+        /// <summary>
+        /// Deletes entity and updates branches.
+        /// </summary>
+        /// <param name="id">Id of entity.</param>
+        /// <returns>True if entity found and deleted.</returns>
+        public virtual async Task<bool> DeleteAsync(string id)
+        {
+            T entity = await GetByIdAsync(id).ConfigureAwait(false);
+            bool result = false;
+            if (entity != default)
+            {
+                result = await _redisDatabase.KeyDeleteAsync(entity.GetRedisKey()).ConfigureAwait(false);
+                await UpdateBranchesAsync(entity, RedisEntityStateEnum.Deleted).ConfigureAwait(false);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Get entity by id.
+        /// </summary>
+        /// <param name="id">Id of Entity</param>
+        /// <returns>Entity of repository</returns>
+        public async Task<T> GetByIdAsync(string id)
+        {
+            IBranch<T> dataBranch = _branches.Find(i => i.GetBranchId() == BRANCH_DATA);
+            if (dataBranch == default)
+            {
+                throw new KeyNotFoundException("Data Branch not found.");
+            }
+            string redisKey = dataBranch.GetBranchKey().Replace("{propertyValue}", id);
+            HashEntry[] hashSet = (await _redisDatabase.HashGetAllAsync(redisKey).ConfigureAwait(false));
+            return hashSet.Length == 0 ? null : hashSet.ConvertFromHashEntryList<T>();
+        }
+
+        /// <summary>
+        /// Get all entities in branch by branchId. If the branch sorted, it returns from sorted branch.
+        /// </summary>
+        /// <param name="branchId">Id to identify branch</param>
+        /// <param name="groups">Groups are values to create branch keys</param>
+        /// <returns>Found entities</returns>
+        public async Task<IEnumerable<T>> GetAsync(string branchId, params string[] groups)
+        {
+            IBranch<T> branch = _branches.Find(b => b.GetBranchId() == branchId);
+            if (branch == default)
+            {
+                throw new KeyNotFoundException($"branchId not found: {branchId}. Possible branches: {String.Join(", ", _branches.Select(i => i.GetBranchKey()))}");
+            }
+
+            if (branch.IsSortable())
+            {
+                return await GetSortedAsync(branch, double.MinValue, double.MaxValue, long.MinValue, long.MaxValue, groups);
+            }
+            else
+            {
+                RedisValue[] ids = await _redisDatabase.SetMembersAsync(branch.GetBranchKey(groups)).ConfigureAwait(false);
+                List<T> resultList = new List<T>();
+                foreach (RedisValue id in ids)
+                {
+                    resultList.Add((await _redisDatabase.HashGetAllAsync($"{typeof(T).Name}:data:{id}").ConfigureAwait(false)).ConvertFromHashEntryList<T>());
+                }
+                return resultList;
+            }
+        }
+
+        /// <summary>
+        /// Get all entities in sorted branch by branchId. If the branch is not sorted throws ArgumentException.
+        /// </summary>
+        /// <param name="branchId">Id to identify branch</param>
+        /// <param name="from">Score from</param>
+        /// <param name="groups">Groups are values to create branch keys.</param>
+        /// <returns>Found entities</returns>
+        public async Task<IEnumerable<T>> GetAsync(string branchId, double from, params string[] groups)
+        {
+            IBranch<T> branch = _branches.Find(b => b.GetBranchId() == branchId);
+            if (branch == default)
+            {
+                throw new KeyNotFoundException($"branchId not found: {branchId}. Possible branches: {String.Join(", ", _branches.Select(i => i.GetBranchKey()))}");
+            }
+
+            if (branch.IsSortable())
+            {
+                return await GetSortedAsync(branch, from, double.MaxValue, long.MinValue, long.MaxValue, groups);
+            }
+            else
+            {
+                throw new ArgumentException($"Branch({branchId}:{branch.GetBranchKey()} is not a sortable branch.)");
+            }
+        }
+
+        /// <summary>
+        /// Get all entities in sorted branch by branchId. If the branch is not sorted throws ArgumentException.
+        /// </summary>
+        /// <param name="branchId">Id to identify branch</param>
+        /// <param name="from">Score from</param>
+        /// <param name="to">Score to</param>
+        /// <param name="groups">Groups are values to create branch keys.</param>
+        /// <returns>Found entities</returns>
+        public async Task<IEnumerable<T>> GetAsync(string branchId, double from, double to, params string[] groups)
+        {
+            IBranch<T> branch = _branches.Find(b => b.GetBranchId() == branchId);
+            if (branch == default)
+            {
+                throw new KeyNotFoundException($"branchId not found: {branchId}. Possible branches: {String.Join(", ", _branches.Select(i => i.GetBranchKey()))}");
+            }
+
+            if (branch.IsSortable())
+            {
+                return await GetSortedAsync(branch, from, to, long.MinValue, long.MaxValue, groups);
+            }
+            else
+            {
+                throw new ArgumentException($"Branch({branchId}:{branch.GetBranchKey()} is not a sortable branch.)");
+            }
+        }
+
+        /// <summary>
+        /// Get all entities in sorted branch by branchId. If the branch is not sorted throws ArgumentException.
+        /// </summary>
+        /// <param name="branchId">Id to identify branch</param>
+        /// <param name="from">Score from</param>
+        /// <param name="to">Score to</param>
+        /// <param name="skip">Skip elements</param>
+        /// <param name="take">Take elements</param>
+        /// <param name="groups">Groups are values to create branch keys.</param>
+        /// <returns>Found entities</returns>
+        public async Task<IEnumerable<T>> GetAsync(string branchId, double from, double to, long skip, long take, params string[] groups)
+        {
+            IBranch<T> branch = _branches.Find(b => b.GetBranchId() == branchId);
+            if (branch == default)
+            {
+                throw new KeyNotFoundException($"branchId not found: {branchId}. Possible branches: {String.Join(", ", _branches.Select(i => i.GetBranchKey()))}");
+            }
+
+            if (branch.IsSortable())
+            {
+                return await GetSortedAsync(branch, from, to, skip, take, groups);
+            }
+            else
+            {
+                throw new ArgumentException($"Branch({branchId}:{branch.GetBranchKey()} is not a sortable branch.)");
+            }
+        }
+
+        /// <summary>
+        /// Get entity counts in the branch. If the branch sorted, it returns counts in the sorted branch.
+        /// </summary>
+        /// <param name="branchId">Id to identify branch</param>
+        /// <param name="groups">Groups parameters</param>
+        /// <returns>Count of entities meet with criterias</returns>
+        public async Task<long> CountAsync(string branchId, params string[] groups)
+        {
+            IBranch<T> branch = _branches.Find(b => b.GetBranchId() == branchId);
+            if (branch == default)
+            {
+                throw new KeyNotFoundException($"branchId not found: {branchId}. Possible branches: {String.Join(", ", _branches.Select(i => i.GetBranchKey()))}");
+            }
+
+            if (branch.IsSortable())
+            {
+                return await CountSortedAsync(branch, double.MinValue, double.MaxValue, groups);
+            }
+            else
+            {
+                return await _redisDatabase.SetLengthAsync(branch.GetBranchKey(groups)).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Get entity counts in the branch. If the branch is not sorted throws ArgumentException.
+        /// </summary>
+        /// <param name="branchId">Id to identify branch</param>
+        /// <param name="from">Score from</param>
+        /// <param name="groups">Groups are values to create branch keys.</param>
+        /// <returns>Count of entities meet with criterias</returns>
+        public async Task<long> CountAsync(string branchId, double from, params string[] groups)
+        {
+            IBranch<T> branch = _branches.Find(b => b.GetBranchId() == branchId);
+            if (branch == default)
+            {
+                throw new KeyNotFoundException($"branchId not found: {branchId}. Possible branches: {String.Join(", ", _branches.Select(i => i.GetBranchKey()))}");
+            }
+
+            if (branch.IsSortable())
+            {
+                return await CountSortedAsync(branch, from, double.MaxValue, groups);
+            }
+            else
+            {
+                throw new ArgumentException($"Branch({branchId}:{branch.GetBranchKey()} is not a sortable branch.)");
+            }
+        }
+
+        /// <summary>
+        /// Get entity counts in the branch. If the branch is not sorted throws ArgumentException.
+        /// </summary>
+        /// <param name="branchId">Id to identify branch</param>
+        /// <param name="from">Score from</param>
+        /// <param name="to">Score to</param>
+        /// <param name="groups">Groups are values to create branch keys.</param>
+        /// <returns>Count of entities meet with criterias</returns>
+        public async Task<long> CountAsync(string branchId, double from, double to, params string[] groups)
+        {
+            IBranch<T> branch = _branches.Find(b => b.GetBranchId() == branchId);
+            if (branch == default)
+            {
+                throw new KeyNotFoundException($"branchId not found: {branchId}. Possible branches: {String.Join(", ", _branches.Select(i => i.GetBranchKey()))}");
+            }
+
+            if (branch.IsSortable())
+            {
+                return await CountSortedAsync(branch, from, to, groups);
+            }
+            else
+            {
+                throw new ArgumentException($"Branch({branchId}:{branch.GetBranchKey()} is not a sortable branch.)");
+            }
+        }
+
+        /// <summary>
+        /// Adds branch. If you add new branch outside of CreateBranches, newly added branch criterias are not applied on already saved entities.
+        /// </summary>
+        /// <param name="branch">IBranch</param>
+        public void AddBranch(IBranch<T> branch)
+        {
+            if (string.IsNullOrEmpty(branch.GetBranchId()))
+            {
+                throw new ArgumentException($"BranchId must be set. branch.SetBranchId(string branchId)");
+            }
+            if (branch.GetEntityType() == default)
+            {
+                throw new ArgumentException($"EntityType must be set. branch.SetEntityType(RedisEntity entity);");
+            }
+            _branches.Add(branch);
+        }
+
+        /// <summary>
         /// Creates branches in this method.
         /// </summary>
         public abstract void CreateBranches();
 
         /// <summary>
-        /// Set key expire for specified entity definde by id.
+        /// Get branch keys.
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="timeSpan"></param>
-        /// <returns></returns>
-        public virtual async Task<bool> SetKeyExpireAsync(string id, TimeSpan timeSpan)
-        {
-            T entity = await GetByIdAsync(id);
-            bool result = false;
-            if (entity != default)
-            {
-                result = await _redisDatabase.KeyExpireAsync(entity.GetRedisKey(), timeSpan).ConfigureAwait(false);
-                foreach (var branch in _branches.Where(b => b.GetBranchId() != BRANCH_DATA))
-                {
-                    string key = branch.GetBranchKey(entity);
-                    if (branch.IsSortable())
-                    {
-                        result = await _redisDatabase.SortedSetRemoveAsync(key, entity.Id).ConfigureAwait(false);
-                    }
-                    else
-                    {
-                        result = await _redisDatabase.SetRemoveAsync(key, entity.Id).ConfigureAwait(false);
-                    }
-                }
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Set key expire for specified entity.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="timeSpan"></param>
-        /// <returns></returns>
-        public virtual async Task<bool> SetKeyExpireAsync(T entity, TimeSpan timeSpan)
-        {
-            bool result = await _redisDatabase.KeyExpireAsync(entity.GetRedisKey(), timeSpan).ConfigureAwait(false);
-            foreach (var branch in _branches.Where(b => b.GetBranchId() != BRANCH_DATA))
-            {
-                string key = branch.GetBranchKey(entity);
-                if (branch.IsSortable())
-                {
-                    result = await _redisDatabase.SortedSetRemoveAsync(key, entity.Id).ConfigureAwait(false);
-                }
-                else
-                {
-                    result = await _redisDatabase.SetRemoveAsync(key, entity.Id).ConfigureAwait(false);
-                }
-            }
-            return result;
-        }
-
+        /// <returns>Branch keys</returns>
         public IEnumerable<string> GetBranches()
         {
             foreach (IBranch<T> branch in Branches)
