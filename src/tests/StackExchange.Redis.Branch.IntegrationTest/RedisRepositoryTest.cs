@@ -32,7 +32,7 @@ namespace StackExchange.Redis.Branch.IntegrationTest
 
             //Assert
             Assert.Equal(9, stockRepository.GetBranches().Count());
-            Assert.Equal(80, await stockRepository.CountByBranchAsync(StockRepository.BRANCH_GROUPALL, "All"));
+            Assert.Equal(80, await stockRepository.CountAsync(StockRepository.BRANCH_GROUPALL, "All"));
         }
     }
 }
