@@ -27,6 +27,7 @@ namespace StackExchange.Redis.Branch.IntegrationTest.Helpers
             var config = new ConfigurationBuilder().AddJsonFile("testsettings.json").Build();
             TestSettings = new TestSettings()
             {
+                IsDockerComposeRequired = Convert.ToBoolean(config.GetSection(TestSettings.Position)["IsDockerComposeRequired"]),
                 RedisConnectionConfiguration = config.GetSection(TestSettings.Position)["RedisConnectionConfiguration"],
                 RedisDockerComposeFile = config.GetSection(TestSettings.Position)["RedisDockerComposeFile"],
                 RedisDockerWorkingDir = config.GetSection(TestSettings.Position)["RedisDockerWorkingDir"],
@@ -40,8 +41,11 @@ namespace StackExchange.Redis.Branch.IntegrationTest.Helpers
                 TestData = (List<StockEntity>)serializer.Deserialize(file, typeof(List<StockEntity>));
             }
 
-            dockerStarter = new DockerStarter(TestSettings.DockerComposeExePath, TestSettings.RedisDockerComposeFile, TestSettings.RedisDockerWorkingDir);
-            dockerStarter.Start();
+            if (TestSettings.IsDockerComposeRequired)
+            {
+                dockerStarter = new DockerStarter(TestSettings.DockerComposeExePath, TestSettings.RedisDockerComposeFile, TestSettings.RedisDockerWorkingDir);
+                dockerStarter.Start();
+            }
 
             IServiceCollection services = new ServiceCollection();
             services.AddSingleton<IConnectionMultiplexer>(sp =>
@@ -66,7 +70,10 @@ namespace StackExchange.Redis.Branch.IntegrationTest.Helpers
                 if (disposing)
                 {
                     DI.Dispose();
-                    dockerStarter.Dispose();
+                    if (TestSettings.IsDockerComposeRequired)
+                    {
+                        dockerStarter.Dispose();
+                    }
                 }
 
                 _disposed = true;

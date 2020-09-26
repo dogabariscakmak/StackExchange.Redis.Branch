@@ -8,12 +8,12 @@ services:
     hostname: redis
     container_name: redis
 
-  #redis-commander:
-    #image: rediscommander/redis-commander:latest
-    #container_name: redis-commander
-    #hostname: redis-commander
-    #restart: always
-    #environment:
-      #- REDIS_HOSTS=local:redis:6379
-    #ports:
-      #- "8081:8081"
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: redis-commander
+    hostname: redis-commander
+    restart: always
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
