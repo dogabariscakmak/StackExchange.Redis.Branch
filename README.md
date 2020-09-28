@@ -1,5 +1,25 @@
 # StackExchange.Redis.Branch
 
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
+
+<br />
+<p align="center">
+  <a href="https://github.com/dogabariscakmak/StackExchange.Redis.Branch">
+    <img src="logo.png" alt="Logo" width="80" height="80">
+  </a>
+
+  <h3 align="center">StackExchange.Redis.Branch</h3>
+
+  <p align="center">
+    Lightweight library to query Redis by predefined queries on top of StackExchange.Redis.
+    <br />
+    <a href="https://github.com/dogabariscakmak/StackExchange.Redis.Branch/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/dogabariscakmak/StackExchange.Redis.Branch/issues">Request Feature</a>
+  </p>
+</p>
+
 <!-- TABLE OF CONTENTS -->
 ## Table of Contents
 
@@ -12,9 +32,9 @@
 
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+## About The Project 
 
-Lightweight library to query Redis by predefined queries on top of StackExchange.Redis. 
+![StackExchange.Redis.Branch][product-screenshot]
 
 This library enables that you can use redis database with predefined queries. Queries are seen like pipelines which are executed when data is writing/removing on redis.  
 
@@ -263,7 +283,14 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - dogabaris.cakmak@gmail.com
+Doğa Barış Çakmak - dogabaris.cakmak@gmail.com
 
 Project Link: [https://github.com/dogabariscakmak/StackExchange.Redis.Branch](https://github.com/dogabariscakmak/StackExchange.Redis.Branch)
 
+*Created my free logo at LogoMakr.com*
+
+[issues-shield]: https://img.shields.io/github/issues/dogabariscakmak/StackExchange.Redis.Branch.svg?style=flat-square
+[issues-url]: https://github.com/dogabariscakmak/StackExchange.Redis.Branch/issues
+[license-shield]: https://img.shields.io/github/license/dogabariscakmak/StackExchange.Redis.Branch.svg?style=flat-square
+[license-url]: https://github.com/dogabariscakmak/StackExchange.Redis.Branch/blob/master/LICENSE
+[product-screenshot]: usage.gif
