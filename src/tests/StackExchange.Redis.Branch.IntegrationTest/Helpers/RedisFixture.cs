@@ -46,7 +46,7 @@ namespace StackExchange.Redis.Branch.IntegrationTest.Helpers
                 TestData = (List<StockEntity>)serializer.Deserialize(file, typeof(List<StockEntity>));
             }
 
-            if (TestSettings.IsDockerComposeRequired)
+            if (TestSettings.IsDockerComposeRequired && !TestSettings.IsGithubAction)
             {
                 dockerStarter = new DockerStarter(TestSettings.DockerComposeExePath, TestSettings.RedisDockerComposeFile, TestSettings.RedisDockerWorkingDir);
                 dockerStarter.Start();
@@ -75,7 +75,7 @@ namespace StackExchange.Redis.Branch.IntegrationTest.Helpers
                 if (disposing)
                 {
                     DI.Dispose();
-                    if (TestSettings.IsDockerComposeRequired)
+                    if (TestSettings.IsDockerComposeRequired && !TestSettings.IsGithubAction)
                     {
                         dockerStarter.Dispose();
                     }
