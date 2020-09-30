@@ -25,13 +25,19 @@ namespace StackExchange.Redis.Branch.IntegrationTest.Helpers
         public RedisFixture()
         {
             var config = new ConfigurationBuilder().AddJsonFile("testsettings.json").Build();
+
+            bool IsGithubAction = false;
+            Boolean.TryParse(Environment.GetEnvironmentVariable("IS_GITHUB_ACTION"), out IsGithubAction);
+
             TestSettings = new TestSettings()
             {
+                IsDockerComposeRequired = Convert.ToBoolean(config.GetSection(TestSettings.Position)["IsDockerComposeRequired"]),
                 RedisConnectionConfiguration = config.GetSection(TestSettings.Position)["RedisConnectionConfiguration"],
                 RedisDockerComposeFile = config.GetSection(TestSettings.Position)["RedisDockerComposeFile"],
                 RedisDockerWorkingDir = config.GetSection(TestSettings.Position)["RedisDockerWorkingDir"],
                 DockerComposeExePath = config.GetSection(TestSettings.Position)["DockerComposeExePath"],
                 TestDataFilePath = config.GetSection(TestSettings.Position)["TestDataFilePath"],
+                IsGithubAction = IsGithubAction
             };
 
             using (StreamReader file = File.OpenText(TestSettings.TestDataFilePath))
@@ -40,8 +46,11 @@ namespace StackExchange.Redis.Branch.IntegrationTest.Helpers
                 TestData = (List<StockEntity>)serializer.Deserialize(file, typeof(List<StockEntity>));
             }
 
-            dockerStarter = new DockerStarter(TestSettings.DockerComposeExePath, TestSettings.RedisDockerComposeFile, TestSettings.RedisDockerWorkingDir);
-            dockerStarter.Start();
+            if (TestSettings.IsDockerComposeRequired && !TestSettings.IsGithubAction)
+            {
+                dockerStarter = new DockerStarter(TestSettings.DockerComposeExePath, TestSettings.RedisDockerComposeFile, TestSettings.RedisDockerWorkingDir);
+                dockerStarter.Start();
+            }
 
             IServiceCollection services = new ServiceCollection();
             services.AddSingleton<IConnectionMultiplexer>(sp =>
@@ -66,7 +75,10 @@ namespace StackExchange.Redis.Branch.IntegrationTest.Helpers
                 if (disposing)
                 {
                     DI.Dispose();
-                    dockerStarter.Dispose();
+                    if (TestSettings.IsDockerComposeRequired && !TestSettings.IsGithubAction)
+                    {
+                        dockerStarter.Dispose();
+                    }
                 }
 
                 _disposed = true;

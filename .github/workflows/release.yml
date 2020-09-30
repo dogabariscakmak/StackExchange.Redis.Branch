@@ -1,0 +1,36 @@
+name: .NET Core
+
+on:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    env:
+      IS_GITHUB_ACTION: true
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Start Redis
+      uses: supercharge/redis-github-action@1.1.0
+      with:
+        redis-version: 6
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
+    - name: Install dependencies
+      run: dotnet restore src/StackExchange.Redis.Branch.sln
+    - name: Build
+      run: dotnet build src/StackExchange.Redis.Branch.sln --configuration Release --no-restore
+    - name: Unit Test
+      run: dotnet test src/tests/StackExchange.Redis.Branch.UnitTest --no-restore --verbosity normal
+    - name: Integration Test
+      run: dotnet test src/tests/StackExchange.Redis.Branch.IntegrationTest --no-restore --verbosity normal
+    - name: Publish StackExchange.Redis.Branch nuget package
+      uses: brandedoutcast/publish-nuget@v2.5.5
+      with:
+          PROJECT_FILE_PATH: src/StackExchange.Redis.Branch/StackExchange.Redis.Branch.csproj
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
