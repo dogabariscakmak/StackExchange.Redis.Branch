@@ -15,5 +15,6 @@ namespace StackExchange.Redis.Branch.IntegrationTest.Helpers
         public string RedisDockerWorkingDir { get; set; }
         public string DockerComposeExePath { get; set; }
         public string TestDataFilePath { get; set; }
+        public bool IsGithubAction { get; set; }
     }
 }
