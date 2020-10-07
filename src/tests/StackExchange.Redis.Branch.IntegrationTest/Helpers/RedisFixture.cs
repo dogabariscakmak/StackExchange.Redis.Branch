@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis.Branch.IntegrationTest.Fakes;
+using StackExchange.Redis.Branch.Repository;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,6 +25,8 @@ namespace StackExchange.Redis.Branch.IntegrationTest.Helpers
 
         public RedisFixture()
         {
+            TestData = new List<StockEntity>();
+
             var config = new ConfigurationBuilder().AddJsonFile("testsettings.json").Build();
 
             bool IsGithubAction = false;
@@ -40,12 +43,6 @@ namespace StackExchange.Redis.Branch.IntegrationTest.Helpers
                 IsGithubAction = IsGithubAction
             };
 
-            using (StreamReader file = File.OpenText(TestSettings.TestDataFilePath))
-            {
-                Newtonsoft.Json.JsonSerializer serializer = new Newtonsoft.Json.JsonSerializer();
-                TestData = (List<StockEntity>)serializer.Deserialize(file, typeof(List<StockEntity>));
-            }
-
             if (TestSettings.IsDockerComposeRequired && !TestSettings.IsGithubAction)
             {
                 dockerStarter = new DockerStarter(TestSettings.DockerComposeExePath, TestSettings.RedisDockerComposeFile, TestSettings.RedisDockerWorkingDir);
@@ -60,6 +57,26 @@ namespace StackExchange.Redis.Branch.IntegrationTest.Helpers
             services.AddRedisBranch(Assembly.GetExecutingAssembly());
 
             DI = services.BuildServiceProvider();
+        }
+
+        public async Task ReloadTestDataAsync()
+        {
+            TestData.Clear();
+            using (StreamReader file = File.OpenText(TestSettings.TestDataFilePath))
+            {
+                Newtonsoft.Json.JsonSerializer serializer = new Newtonsoft.Json.JsonSerializer();
+                TestData.AddRange((List<StockEntity>)serializer.Deserialize(file, typeof(List<StockEntity>)));
+            }
+
+            var connectionMultiplexer = (ConnectionMultiplexer)DI.GetService<IConnectionMultiplexer>();
+            var server = connectionMultiplexer.GetServer("localhost:6379");
+            await server.FlushDatabaseAsync();
+
+            StockRepository stockRepository = (StockRepository)DI.GetService<IRedisRepository<StockEntity>>();
+            foreach (StockEntity entity in TestData)
+            {
+                await stockRepository.AddAsync(entity);
+            }
         }
 
         public void Dispose()

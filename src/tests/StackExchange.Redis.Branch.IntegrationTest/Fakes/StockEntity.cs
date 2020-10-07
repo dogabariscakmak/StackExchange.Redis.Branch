@@ -36,16 +36,17 @@ namespace StackExchange.Redis.Branch.IntegrationTest.Fakes
 
         public StockEntity(string id, string name, StockSector sector, double price, double priceChangeRate)
         {
+            Random random = new Random();
+
             Id = id;
             Name = name;
             Symbol = name.Substring(0, name.Length > 3 ? 3 : name.Length);
             Sector = sector;
             Price = price;
             PriceChangeRate = priceChangeRate;
-            CreatedDateTime = DateTimeOffset.UtcNow.DateTime;
+            CreatedDateTime = DateTimeOffset.UtcNow.DateTime.AddMinutes(random.Next(-720, 720));
             IsActive = true;
 
-            Random random = new Random();
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             DummyString = new string(Enumerable.Repeat(chars, 10).Select(s => s[random.Next(s.Length)]).ToArray());
         }
