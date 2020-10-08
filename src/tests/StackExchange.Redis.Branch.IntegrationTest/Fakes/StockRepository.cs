@@ -79,7 +79,7 @@ namespace StackExchange.Redis.Branch.IntegrationTest.Fakes
 
         public ProfitLevel GetProfitLevel(StockEntity stock)
         {
-            if (stock.PriceChangeRate > 10) return ProfitLevel.Great;
+            if (stock.PriceChangeRate > 0.10) return ProfitLevel.Great;
             else if (stock.PriceChangeRate > 0) return ProfitLevel.Normal;
             else return ProfitLevel.Loss;
         }
