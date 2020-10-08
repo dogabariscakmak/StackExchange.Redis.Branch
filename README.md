@@ -41,7 +41,17 @@ This library enables that you can use redis database with predefined queries. Qu
 <!-- GETTING STARTED -->
 ## Getting Started
 
-To get start with StackExchange.Redis.Branch you need the first clone repository and add as a reference to your project. Soon it will be available as nuget package.
+To get start with StackExchange.Redis.Branch you can clone repository or add as a reference to your project from nuget.
+
+#### Package Manager
+```Install-Package StackExchange.Redis.Branch -Version 1.0.0```
+
+#### .NET CLI
+```dotnet add package StackExchange.Redis.Branch --version 1.0.0```
+
+#### ```PackageReference```
+```<PackageReference Include="StackExchange.Redis.Branch" Version="1.0.0" />```
+
 
 <!-- USAGE EXAMPLES -->
 ## Usage
