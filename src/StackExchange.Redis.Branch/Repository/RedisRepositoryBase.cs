@@ -228,7 +228,7 @@ namespace StackExchange.Redis.Branch.Repository
 
             if (branch.IsSortable())
             {
-                return await GetSortedAsync(branch, double.MinValue, double.MaxValue, long.MinValue, long.MaxValue, groups);
+                return await GetSortedAsync(branch, double.MinValue, double.MaxValue, 0, long.MaxValue, groups);
             }
             else
             {
@@ -259,7 +259,7 @@ namespace StackExchange.Redis.Branch.Repository
 
             if (branch.IsSortable())
             {
-                return await GetSortedAsync(branch, from, double.MaxValue, long.MinValue, long.MaxValue, groups);
+                return await GetSortedAsync(branch, from, double.MaxValue, 0, long.MaxValue, groups);
             }
             else
             {
@@ -285,7 +285,7 @@ namespace StackExchange.Redis.Branch.Repository
 
             if (branch.IsSortable())
             {
-                return await GetSortedAsync(branch, from, to, long.MinValue, long.MaxValue, groups);
+                return await GetSortedAsync(branch, from, to, 0, long.MaxValue, groups);
             }
             else
             {
