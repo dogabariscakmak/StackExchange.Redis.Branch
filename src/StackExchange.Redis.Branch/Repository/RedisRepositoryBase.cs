@@ -134,6 +134,15 @@ namespace StackExchange.Redis.Branch.Repository
         /// <param name="entity">Entity of repository</param>
         public virtual async Task AddAsync(T entity)
         {
+            //If entity already there, we should delete and add it again.
+            //So, we can apply group by function for new values. 
+            //If the entity should be deleted because updated one not fit for group by function branch, this way it is deleted
+            T existedEntity = await GetByIdAsync(entity.Id);
+            if(existedEntity != default)
+            {
+                await DeleteAsync(existedEntity);
+            }
+
             await _redisDatabase.HashSetAsync(entity).ConfigureAwait(false);
             await UpdateBranchesAsync(entity, RedisEntityStateEnum.Added).ConfigureAwait(false);
         }
@@ -144,6 +153,15 @@ namespace StackExchange.Redis.Branch.Repository
         /// <param name="entity">Entity of repository</param>
         public virtual async Task UpdateAsync(T entity)
         {
+            //If entity already there, we should delete and add it again.
+            //So, we can apply group by function for new values. 
+            //If the entity should be deleted because updated one not fit for group by function branch, this way it is deleted
+            T existedEntity = await GetByIdAsync(entity.Id);
+            if (existedEntity != default)
+            {
+                await DeleteAsync(existedEntity);
+            }
+
             await _redisDatabase.HashSetAsync(entity).ConfigureAwait(false);
             await UpdateBranchesAsync(entity, RedisEntityStateEnum.Updated).ConfigureAwait(false);
         }
