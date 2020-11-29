@@ -10,6 +10,10 @@ namespace StackExchange.Redis.Branch.Repository
     /// Base abstract class for redis repositories. Any overriden function must call base function. Otherwise unexpected behavior may be happened.
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    /// <remarks>
+    ///     If any derived class from RedisRepositoryBase added to DI as Singleton, 
+    ///     making it thread-safe is the developer's responsibility.
+    /// </remarks> 
     public abstract class RedisRepositoryBase<T> : IRedisRepository<T> where T : RedisEntity, new()
     {
         public static string BRANCH_DATA = "BRANCH_DATA";
@@ -76,7 +80,7 @@ namespace StackExchange.Redis.Branch.Repository
         /// <param name="entity">Entity of repository</param>
         /// <param name="entityState">RedisEntityStateEnum</param>
         /// <returns></returns>
-        private async Task UpdateBranchesAsync(T entity, RedisEntityStateEnum entityState)
+        protected async Task UpdateBranchesAsync(T entity, RedisEntityStateEnum entityState)
         {
             switch (entityState)
             {

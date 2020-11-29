@@ -23,9 +23,13 @@ namespace StackExchange.Redis.Branch
         }
 
         /// <summary>
-        /// Helper method to add redis repositories to DI as Singleton.
+        /// Helper method to add redis repositories to DI as Scoped.
         /// </summary>
         /// <param name="assemblies"></param>
+        /// <remarks>
+        ///     If any derived class from RedisRepositoryBase added to DI as Singleton, 
+        ///     making it thread-safe is the developer's responsibility.
+        /// </remarks> 
         private static void AddRedisBranches(this IServiceCollection services, params Assembly[] assemblies)
         {
             foreach (var assembly in assemblies)
@@ -42,7 +46,7 @@ namespace StackExchange.Redis.Branch
                         var iRepositoryType = typeof(IRedisRepository<>);
                         var iRepository = iRepositoryType.MakeGenericType(entityType);
 
-                        var serviceDescriptor = new ServiceDescriptor(iRepository, type, ServiceLifetime.Singleton);
+                        var serviceDescriptor = new ServiceDescriptor(iRepository, type, ServiceLifetime.Scoped);
                         services.Add(serviceDescriptor);
                     }
                 }
