@@ -1,15 +1,17 @@
-name: .NET Core
+name: Continuous Integration
 
-on:
-  pull_request:
-    branches: [ master ]
+on: 
+  push:
+    branches-ignore: master
 
 jobs:
-  build:
+  continuous-integration:
 
     runs-on: ubuntu-latest
+
     env:
       IS_GITHUB_ACTION: true
+
     steps:
     - name: Git checkout
       uses: actions/checkout@v2
@@ -29,8 +31,3 @@ jobs:
       run: dotnet test src/tests/StackExchange.Redis.Branch.UnitTest --no-restore --verbosity normal
     - name: Integration Test
       run: dotnet test src/tests/StackExchange.Redis.Branch.IntegrationTest --no-restore --verbosity normal
-    - name: Publish StackExchange.Redis.Branch nuget package
-      uses: brandedoutcast/publish-nuget@v2.5.5
-      with:
-          PROJECT_FILE_PATH: src/StackExchange.Redis.Branch/StackExchange.Redis.Branch.csproj
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
