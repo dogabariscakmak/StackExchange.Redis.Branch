@@ -34,18 +34,17 @@ namespace StackExchange.Redis.Branch.IntegrationTest.Helpers
 
             TestSettings = new TestSettings()
             {
-                IsDockerComposeRequired = Convert.ToBoolean(config.GetSection(TestSettings.Position)["IsDockerComposeRequired"]),
                 RedisConnectionConfiguration = config.GetSection(TestSettings.Position)["RedisConnectionConfiguration"],
-                RedisDockerComposeFile = config.GetSection(TestSettings.Position)["RedisDockerComposeFile"],
-                RedisDockerWorkingDir = config.GetSection(TestSettings.Position)["RedisDockerWorkingDir"],
+                DockerComposeFile = config.GetSection(TestSettings.Position)["DockerComposeFile"],
+                DockerWorkingDir = config.GetSection(TestSettings.Position)["DockerWorkingDir"],
                 DockerComposeExePath = config.GetSection(TestSettings.Position)["DockerComposeExePath"],
                 TestDataFilePath = config.GetSection(TestSettings.Position)["TestDataFilePath"],
                 IsGithubAction = IsGithubAction
             };
 
-            if (TestSettings.IsDockerComposeRequired && !TestSettings.IsGithubAction)
+            if (!TestSettings.IsGithubAction)
             {
-                dockerStarter = new DockerStarter(TestSettings.DockerComposeExePath, TestSettings.RedisDockerComposeFile, TestSettings.RedisDockerWorkingDir);
+                dockerStarter = new DockerStarter(TestSettings.DockerComposeExePath, TestSettings.DockerComposeFile, TestSettings.DockerWorkingDir);
                 dockerStarter.Start();
             }
 
@@ -92,7 +91,7 @@ namespace StackExchange.Redis.Branch.IntegrationTest.Helpers
                 if (disposing)
                 {
                     DI.Dispose();
-                    if (TestSettings.IsDockerComposeRequired && !TestSettings.IsGithubAction)
+                    if (!TestSettings.IsGithubAction)
                     {
                         dockerStarter.Dispose();
                     }

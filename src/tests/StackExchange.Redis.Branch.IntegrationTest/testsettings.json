@@ -3,6 +3,8 @@
     "IsDockerComposeRequired": true,
     "RedisConnectionConfiguration": "localhost:6379,allowAdmin=true",
     "DockerComposeExePath": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker-compose.exe",
+    "DockerWorkingDir": "D:\\OpenSourceProjects\\StackExchange.Redis.Branch\\src\\tests\\StackExchange.Redis.Branch.IntegrationTest",
+    "DockerComposeFile": "D:\\OpenSourceProjects\\StackExchange.Redis.Branch\\src\\tests\\StackExchange.Redis.Branch.IntegrationTest\\dockercompose-integrationtest.yml",
     "TestDataFilePath": "testdata.json"
   }
 }
