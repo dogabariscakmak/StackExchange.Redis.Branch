@@ -13,7 +13,14 @@ namespace StackExchange.Redis.Branch.UnitTest.Fakes
     {
         public int Compare(FakeRedisValueWrapper x, FakeRedisValueWrapper y)
         {
-            return x.Score.CompareTo(y.Score);
+            if(x.Score == y.Score)
+            {
+                return x.Value.CompareTo(y.Value);
+            }
+            else
+            {
+                return x.Score.CompareTo(y.Score);
+            }
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace StackExchange.Redis.Branch.IntegrationTest.Fakes
 {
+    [RedisQueryable]
     public class StockEntity : RedisEntity
     {
         public string Name { get; set; }
@@ -24,6 +25,28 @@ namespace StackExchange.Redis.Branch.IntegrationTest.Fakes
 
         public bool IsActive { get; set; }
 
+        public char FirstLetterOfName { get; set; }
+
+        public byte LastByteOfName { get; set; }
+
+        public short LengthOfNameShort { get; set; }
+
+        public ushort LengthOfNameUshort { get; set; }
+
+        public int LengthOfNameInt { get; set; }
+
+        public uint LengthOfNameUint { get; set; }
+
+        public long LengthOfNameLong { get; set; }
+
+        public ulong LengthOfNameUlong { get; set; }
+
+        public float LengthOfNameFloat { get; set; }
+
+        public double LengthOfNameDouble { get; set; }
+
+        public decimal LengthOfNameDecimal { get; set; }
+
         public StockMetaData MetaData { get; set; }
 
         [IgnoreDataMember]
@@ -36,17 +59,27 @@ namespace StackExchange.Redis.Branch.IntegrationTest.Fakes
 
         public StockEntity(string id, string name, StockSector sector, double price, double priceChangeRate)
         {
-            Random random = new Random();
-
             Id = id;
             Name = name;
             Symbol = name.Substring(0, name.Length > 3 ? 3 : name.Length);
             Sector = sector;
             Price = price;
             PriceChangeRate = priceChangeRate;
-            CreatedDateTime = DateTimeOffset.UtcNow.DateTime.AddMinutes(random.Next(-720, 720));
+            CreatedDateTime = DateTimeOffset.UtcNow.DateTime;
             IsActive = true;
+            FirstLetterOfName = name.ToCharArray()[0];
+            LastByteOfName = (byte)name.ToCharArray()[name.Length - 1];
+            LengthOfNameShort = (short)name.Length;
+            LengthOfNameUshort = (ushort)name.Length;
+            LengthOfNameInt = name.Length;
+            LengthOfNameUint = (uint)name.Length;
+            LengthOfNameLong = name.Length;
+            LengthOfNameUlong = (ulong)name.Length;
+            LengthOfNameFloat = (float)name.Length;
+            LengthOfNameDouble = (double)name.Length;
+            LengthOfNameDecimal = (decimal)name.Length;
 
+            Random random = new Random();
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             DummyString = new string(Enumerable.Repeat(chars, 10).Select(s => s[random.Next(s.Length)]).ToArray());
         }
@@ -62,10 +95,36 @@ namespace StackExchange.Redis.Branch.IntegrationTest.Fakes
             CreatedDateTime = DateTimeOffset.UtcNow.DateTime;
             MetaData = metaData;
             IsActive = true;
+            FirstLetterOfName = name.ToCharArray()[0];
+            LastByteOfName = (byte)name.ToCharArray()[name.Length - 1];
+            LengthOfNameShort = (short)name.Length;
+            LengthOfNameUshort = (ushort)name.Length;
+            LengthOfNameInt = name.Length;
+            LengthOfNameUint = (uint)name.Length;
+            LengthOfNameLong = name.Length;
+            LengthOfNameUlong = (ulong)name.Length;
+            LengthOfNameFloat = (float)name.Length;
+            LengthOfNameDouble = (double)name.Length;
+            LengthOfNameDecimal = (decimal)name.Length;
 
             Random random = new Random();
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             DummyString = new string(Enumerable.Repeat(chars, 10).Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        public void FillCalculatedProperties()
+        {
+            FirstLetterOfName = Name.ToCharArray()[0];
+            LastByteOfName = (byte)Name.ToCharArray()[Name.Length - 1];
+            LengthOfNameShort = (short)Name.Length;
+            LengthOfNameUshort = (ushort)Name.Length;
+            LengthOfNameInt = Name.Length;
+            LengthOfNameUint = (uint)Name.Length;
+            LengthOfNameLong = Name.Length;
+            LengthOfNameUlong = (ulong)Name.Length;
+            LengthOfNameFloat = (float)Name.Length;
+            LengthOfNameDouble = (double)Name.Length;
+            LengthOfNameDecimal = (decimal)Name.Length;
         }
     }
 

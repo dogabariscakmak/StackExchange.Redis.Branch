@@ -21,7 +21,7 @@ namespace StackExchange.Redis.Branch.UnitTest
             HashEntry[] hashEntries = await fakeDatabase.HashGetAllAsync(expectedTeslaEntity.GetRedisKey());
 
             //Assert 
-            Assert.Equal(9, hashEntries.Count());
+            Assert.Equal(20, hashEntries.Count());
 
             Assert.Equal("Name", hashEntries[0].Name);
             Assert.Equal(expectedTeslaEntity.Name, hashEntries[0].Value);
@@ -46,11 +46,44 @@ namespace StackExchange.Redis.Branch.UnitTest
             Assert.Equal("IsActive", hashEntries[6].Name);
             Assert.Equal(expectedTeslaEntity.IsActive.ToString(), hashEntries[6].Value);
 
-            Assert.Equal("MetaData", hashEntries[7].Name);
-            Assert.Equal(JsonConvert.SerializeObject(expectedTeslaEntity.MetaData, Formatting.None), hashEntries[7].Value);
+            Assert.Equal("FirstLetterOfName", hashEntries[7].Name);
+            Assert.Equal(expectedTeslaEntity.FirstLetterOfName.ToString(), hashEntries[7].Value);
 
-            Assert.Equal("Id", hashEntries[8].Name);
-            Assert.Equal(expectedTeslaEntity.Id.ToString(), hashEntries[8].Value);
+            Assert.Equal("LastByteOfName", hashEntries[8].Name);
+            Assert.Equal(expectedTeslaEntity.LastByteOfName.ToString(), hashEntries[8].Value);
+            
+            Assert.Equal("LengthOfNameShort", hashEntries[9].Name);
+            Assert.Equal(expectedTeslaEntity.LengthOfNameShort.ToString(), hashEntries[9].Value);
+
+            Assert.Equal("LengthOfNameUshort", hashEntries[10].Name);
+            Assert.Equal(expectedTeslaEntity.LengthOfNameUshort.ToString(), hashEntries[10].Value);
+
+            Assert.Equal("LengthOfNameInt", hashEntries[11].Name);
+            Assert.Equal(expectedTeslaEntity.LengthOfNameInt.ToString(), hashEntries[11].Value);
+
+            Assert.Equal("LengthOfNameUint", hashEntries[12].Name);
+            Assert.Equal(expectedTeslaEntity.LengthOfNameUint.ToString(), hashEntries[12].Value);
+
+            Assert.Equal("LengthOfNameLong", hashEntries[13].Name);
+            Assert.Equal(expectedTeslaEntity.LengthOfNameLong.ToString(), hashEntries[13].Value);
+
+            Assert.Equal("LengthOfNameUlong", hashEntries[14].Name);
+            Assert.Equal(expectedTeslaEntity.LengthOfNameUlong.ToString(), hashEntries[14].Value);
+
+            Assert.Equal("LengthOfNameFloat", hashEntries[15].Name);
+            Assert.Equal(expectedTeslaEntity.LengthOfNameFloat.ToString(), hashEntries[15].Value);
+
+            Assert.Equal("LengthOfNameDouble", hashEntries[16].Name);
+            Assert.Equal(expectedTeslaEntity.LengthOfNameDouble.ToString(), hashEntries[16].Value);
+
+            Assert.Equal("LengthOfNameDecimal", hashEntries[17].Name);
+            Assert.Equal(expectedTeslaEntity.LengthOfNameDecimal.ToString(), hashEntries[17].Value);
+
+            Assert.Equal("MetaData", hashEntries[18].Name);
+            Assert.Equal(JsonConvert.SerializeObject(expectedTeslaEntity.MetaData, Formatting.None), hashEntries[18].Value);
+            
+            Assert.Equal("Id", hashEntries[19].Name);
+            Assert.Equal(expectedTeslaEntity.Id.ToString(), hashEntries[19].Value);
         }
 
 

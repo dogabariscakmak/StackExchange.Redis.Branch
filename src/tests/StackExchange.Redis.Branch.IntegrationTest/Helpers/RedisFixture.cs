@@ -74,6 +74,7 @@ namespace StackExchange.Redis.Branch.IntegrationTest.Helpers
             StockRepository stockRepository = (StockRepository)DI.GetService<IRedisRepository<StockEntity>>();
             foreach (StockEntity entity in TestData)
             {
+                entity.FillCalculatedProperties();
                 await stockRepository.AddAsync(entity);
             }
         }
