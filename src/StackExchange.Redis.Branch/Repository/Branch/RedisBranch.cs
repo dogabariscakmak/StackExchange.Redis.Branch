@@ -7,14 +7,15 @@ using System.Linq.Expressions;
 namespace StackExchange.Redis.Branch.Repository
 {
     /// <summary>
-    /// Redis Branch. Branch contains filters, groups and a sort.
+    /// Redis Branch. There are two kind of Redis Branch: One can contain filters, groups and a sort. Other can contain only query.
     /// </summary>
     /// <typeparam name="T">Redis Entity</typeparam>
-    public class RedisBranch<T> : IBranch<T> where T : RedisEntity, new()
+    public class RedisBranch<T> : IBranch<T>, IBranchInternal<T> where T : RedisEntity, new()
     {
         internal List<IFilter<T>> Filters { get; private set; }
         internal List<IGroup<T>> Groups { get; private set; }
         internal ISort<T> Sort { get; private set; }
+        internal IQuery<T> Query { get; private set; }
 
         private string _branchId { get; set; }
         private Type _entityType { get; set; }
@@ -82,6 +83,11 @@ namespace StackExchange.Redis.Branch.Repository
                 branchKey = $"{branchKey}:{Sort.GetKey()}";
             }
 
+            if (Query != default)
+            {
+                branchKey = $"{branchKey}:{Query.GetKey(entity)}";
+            }
+
             return branchKey;
         }
 
@@ -136,7 +142,33 @@ namespace StackExchange.Redis.Branch.Repository
             return this;
         }
 
-        public bool ApplyFilters(T entity)
+        bool IBranchInternal<T>.IsSortable()
+        {
+            return Sort != default;
+        }
+
+        bool IBranchInternal<T>.IsQueryable()
+        {
+            return Query != default;
+        }
+
+        double IBranchInternal<T>.GetScore(T entity)
+        {
+            if (((IBranchInternal<T>)this).IsSortable())
+            {
+                return Sort.GetScore(entity);
+            }
+            else if (((IBranchInternal<T>)this).IsQueryable())
+            {
+                return Query.GetScore(entity);
+            }
+            else
+            {
+                throw new InvalidOperationException($"{GetBranchId()} is not a sortable branch.");
+            }
+        }
+
+        bool IBranchInternal<T>.ApplyFilters(T entity)
         {
             bool isFilterPass = true;
             foreach (IFilter<T> filter in Filters)
@@ -150,21 +182,10 @@ namespace StackExchange.Redis.Branch.Repository
             return isFilterPass;
         }
 
-        public bool IsSortable()
+        void IBranchInternal<T>.QueryBy(string propName)
         {
-            return Sort != default;
+            Query = new RedisQueryByProperty<T>(propName);
         }
 
-        public double GetScore(T entity)
-        {
-            if (IsSortable())
-            {
-                return Sort.GetScore(entity);
-            }
-            else
-            {
-                throw new InvalidOperationException($"{GetBranchId()} is not a sortable branch.");
-            }
-        }
     }
 }

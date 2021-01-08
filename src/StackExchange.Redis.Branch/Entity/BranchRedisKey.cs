@@ -27,6 +27,9 @@ namespace StackExchange.Redis.Branch.Entity
                 case BranchRedisKeyEnum.Group:
                     By = byOrValue;
                     break;
+                case BranchRedisKeyEnum.Query:
+                    By = byOrValue;
+                    break;
                 default:
                     throw new ArgumentException($"{type.GetType().Name} is not valid BranchRedisKeyEnum.");
             }
@@ -61,6 +64,8 @@ namespace StackExchange.Redis.Branch.Entity
                     {
                         return $"grouped:{By}";
                     }
+                case BranchRedisKeyEnum.Query:
+                    return By;
                 default:
                     throw new InvalidOperationException($"{Type.GetType().Name} is not known value.");
             }

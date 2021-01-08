@@ -5,5 +5,6 @@
         Data = 1,
         Sort = 2,
         Group = 3,
+        Query = 4
     }
 }

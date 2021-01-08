@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace StackExchange.Redis.Branch.Repository
@@ -17,6 +19,7 @@ namespace StackExchange.Redis.Branch.Repository
     public abstract class RedisRepositoryBase<T> : IRedisRepository<T> where T : RedisEntity, new()
     {
         public static string BRANCH_DATA = "BRANCH_DATA";
+        public static string BRANCH_QUERY_PREFIX = "BRANCH_QUERY";
 
         protected readonly IConnectionMultiplexer _redisConnectionMultiplexer;
         protected readonly IDatabase _redisDatabase;
@@ -38,6 +41,32 @@ namespace StackExchange.Redis.Branch.Repository
             _branches.Add(dataBranch.GroupBy());
 
             CreateBranches();
+            CreateQueryBranches();
+        }
+
+        /// <summary>
+        /// Creates branches for each property. These branches are used by query providers. For now, supported types: string, double, bool, DateTime
+        /// </summary>
+        private void CreateQueryBranches()
+        {
+            Type[] validPropertyTypes = { typeof(bool), typeof(char), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint),
+                                          typeof(long), typeof(ulong), typeof(float), typeof(double), typeof(decimal), typeof(DateTime), typeof(string),
+                                          typeof(Enum)};
+            if (Attribute.IsDefined(typeof(T), typeof(RedisQueryableAttribute)))
+            {
+                foreach (PropertyInfo property in typeof(T).GetProperties())
+                {
+                    IBranch<T> queryBranch = new RedisBranch<T>();
+                    queryBranch.SetBranchId($"{BRANCH_QUERY_PREFIX}_{property.Name}");
+                    if ((validPropertyTypes.Contains(property.PropertyType) || property.PropertyType.IsEnum)
+                        && !property.IsDefined(typeof(IgnoreDataMemberAttribute), true)
+                        && property.Name != "Id")
+                    {
+                        ((IBranchInternal<T>)queryBranch).QueryBy(property.Name);
+                        AddBranch(queryBranch);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -89,11 +118,15 @@ namespace StackExchange.Redis.Branch.Repository
                     foreach (var branch in _branches.Where(b => b.GetBranchId() != BRANCH_DATA))
                     {
                         string key = branch.GetBranchKey(entity);
-                        if (branch.ApplyFilters(entity))
+                        if (((IBranchInternal<T>)branch).ApplyFilters(entity))
                         {
-                            if (branch.IsSortable())
+                            if (((IBranchInternal<T>)branch).IsSortable())
                             {
-                                await _redisDatabase.SortedSetAddAsync(key, entity.Id, branch.GetScore(entity)).ConfigureAwait(false);
+                                await _redisDatabase.SortedSetAddAsync(key, entity.Id, ((IBranchInternal<T>)branch).GetScore(entity)).ConfigureAwait(false);
+                            }
+                            else if (((IBranchInternal<T>)branch).IsQueryable())
+                            {
+                                await _redisDatabase.SortedSetAddAsync(key, entity.Id, ((IBranchInternal<T>)branch).GetScore(entity)).ConfigureAwait(false);
                             }
                             else
                             {
@@ -102,7 +135,7 @@ namespace StackExchange.Redis.Branch.Repository
                         }
                         else
                         {
-                            if (branch.IsSortable())
+                            if (((IBranchInternal<T>)branch).IsSortable() || ((IBranchInternal<T>)branch).IsQueryable())
                             {
                                 await _redisDatabase.SortedSetRemoveAsync(key, entity.Id).ConfigureAwait(false);
                             }
@@ -117,7 +150,7 @@ namespace StackExchange.Redis.Branch.Repository
                     foreach (var branch in _branches.Where(b => b.GetBranchId() != BRANCH_DATA))
                     {
                         string key = branch.GetBranchKey(entity);
-                        if (branch.IsSortable())
+                        if (((IBranchInternal<T>)branch).IsSortable() || ((IBranchInternal<T>)branch).IsQueryable())
                         {
                             await _redisDatabase.SortedSetRemoveAsync(key, entity.Id).ConfigureAwait(false);
                         }
@@ -142,7 +175,7 @@ namespace StackExchange.Redis.Branch.Repository
             //So, we can apply group by function for new values. 
             //If the entity should be deleted because updated one not fit for group by function branch, this way it is deleted
             T existedEntity = await GetByIdAsync(entity.Id);
-            if(existedEntity != default)
+            if (existedEntity != default)
             {
                 await DeleteAsync(existedEntity);
             }
@@ -230,7 +263,7 @@ namespace StackExchange.Redis.Branch.Repository
                 throw new KeyNotFoundException($"branchId not found: {branchId}. Possible branches: {String.Join(", ", _branches.Select(i => i.GetBranchKey()))}");
             }
 
-            if (branch.IsSortable())
+            if (((IBranchInternal<T>)branch).IsSortable())
             {
                 return await GetSortedAsync(branch, double.MinValue, double.MaxValue, 0, long.MaxValue, groups);
             }
@@ -261,7 +294,7 @@ namespace StackExchange.Redis.Branch.Repository
                 throw new KeyNotFoundException($"branchId not found: {branchId}. Possible branches: {String.Join(", ", _branches.Select(i => i.GetBranchKey()))}");
             }
 
-            if (branch.IsSortable())
+            if (((IBranchInternal<T>)branch).IsSortable())
             {
                 return await GetSortedAsync(branch, from, double.MaxValue, 0, long.MaxValue, groups);
             }
@@ -287,7 +320,7 @@ namespace StackExchange.Redis.Branch.Repository
                 throw new KeyNotFoundException($"branchId not found: {branchId}. Possible branches: {String.Join(", ", _branches.Select(i => i.GetBranchKey()))}");
             }
 
-            if (branch.IsSortable())
+            if (((IBranchInternal<T>)branch).IsSortable())
             {
                 return await GetSortedAsync(branch, from, to, 0, long.MaxValue, groups);
             }
@@ -315,7 +348,7 @@ namespace StackExchange.Redis.Branch.Repository
                 throw new KeyNotFoundException($"branchId not found: {branchId}. Possible branches: {String.Join(", ", _branches.Select(i => i.GetBranchKey()))}");
             }
 
-            if (branch.IsSortable())
+            if (((IBranchInternal<T>)branch).IsSortable())
             {
                 return await GetSortedAsync(branch, from, to, skip, take, groups);
             }
@@ -339,7 +372,7 @@ namespace StackExchange.Redis.Branch.Repository
                 throw new KeyNotFoundException($"branchId not found: {branchId}. Possible branches: {String.Join(", ", _branches.Select(i => i.GetBranchKey()))}");
             }
 
-            if (branch.IsSortable())
+            if (((IBranchInternal<T>)branch).IsSortable())
             {
                 return await CountSortedAsync(branch, double.MinValue, double.MaxValue, groups);
             }
@@ -364,7 +397,7 @@ namespace StackExchange.Redis.Branch.Repository
                 throw new KeyNotFoundException($"branchId not found: {branchId}. Possible branches: {String.Join(", ", _branches.Select(i => i.GetBranchKey()))}");
             }
 
-            if (branch.IsSortable())
+            if (((IBranchInternal<T>)branch).IsSortable())
             {
                 return await CountSortedAsync(branch, from, double.MaxValue, groups);
             }
@@ -390,7 +423,7 @@ namespace StackExchange.Redis.Branch.Repository
                 throw new KeyNotFoundException($"branchId not found: {branchId}. Possible branches: {String.Join(", ", _branches.Select(i => i.GetBranchKey()))}");
             }
 
-            if (branch.IsSortable())
+            if (((IBranchInternal<T>)branch).IsSortable())
             {
                 return await CountSortedAsync(branch, from, to, groups);
             }
