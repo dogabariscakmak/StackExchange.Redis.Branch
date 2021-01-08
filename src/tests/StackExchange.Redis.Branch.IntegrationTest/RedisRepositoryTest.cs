@@ -30,7 +30,7 @@ namespace StackExchange.Redis.Branch.IntegrationTest
             await fixture.ReloadTestDataAsync();
 
             //Assert
-            Assert.Equal(9, stockRepository.GetBranches().Count());
+            Assert.Equal(27, stockRepository.GetBranches().Count());
 
             #region BRANCH_GROUPALL
             Assert.Equal(fixture.TestData.Count(i => i.IsActive),

@@ -18,6 +18,18 @@ namespace StackExchange.Redis.Branch.UnitTest.Fakes
 
         #region Methods need to be implemented
 
+        public void HashSet(RedisKey key, HashEntry[] hashFields, CommandFlags flags = CommandFlags.None)
+        {
+            if (_hashSet.ContainsKey(key))
+            {
+                _hashSet[key] = hashFields;
+            }
+            else
+            {
+                _hashSet.Add(key, hashFields);
+            }
+        }
+
         public Task HashSetAsync(RedisKey key, HashEntry[] hashFields, CommandFlags flags = CommandFlags.None)
         {
             if (_hashSet.ContainsKey(key))
@@ -31,9 +43,23 @@ namespace StackExchange.Redis.Branch.UnitTest.Fakes
             return Task.CompletedTask;
         }
 
+        public bool KeyDelete(RedisKey key, CommandFlags flags = CommandFlags.None)
+        {
+            return _hashSet.Remove(key) && _set.Remove(key) && _sortedSet.Remove(key);
+        }
+
         public Task<bool> KeyDeleteAsync(RedisKey key, CommandFlags flags = CommandFlags.None)
         {
             return Task.FromResult(_hashSet.Remove(key) && _set.Remove(key) && _sortedSet.Remove(key));
+        }
+
+        public RedisValue[] SetMembers(RedisKey key, CommandFlags flags = CommandFlags.None)
+        {
+            if (IsKeyExpired(key))
+            {
+                return Array.Empty<RedisValue>();
+            }
+            return _set[key].ToArray();
         }
 
         public Task<RedisValue[]> SetMembersAsync(RedisKey key, CommandFlags flags = CommandFlags.None)
@@ -45,6 +71,15 @@ namespace StackExchange.Redis.Branch.UnitTest.Fakes
             return Task.FromResult(_set[key].ToArray());
         }
 
+        public HashEntry[] HashGetAll(RedisKey key, CommandFlags flags = CommandFlags.None)
+        {
+            if (IsKeyExpired(key) || !_hashSet.ContainsKey(key))
+            {
+                return Array.Empty<HashEntry>();
+            }
+            return _hashSet[key];
+        }
+
         public Task<HashEntry[]> HashGetAllAsync(RedisKey key, CommandFlags flags = CommandFlags.None)
         {
             if (IsKeyExpired(key) || !_hashSet.ContainsKey(key))
@@ -52,6 +87,19 @@ namespace StackExchange.Redis.Branch.UnitTest.Fakes
                 return Task.FromResult(Array.Empty<HashEntry>());
             }
             return Task.FromResult(_hashSet[key]);
+        }
+
+        public RedisValue[] SortedSetRangeByScore(RedisKey key, double start = double.NegativeInfinity, double stop = double.PositiveInfinity, Exclude exclude = Exclude.None, Order order = Order.Ascending, long skip = 0, long take = -1, CommandFlags flags = CommandFlags.None)
+        {
+            if (IsKeyExpired(key))
+            {
+                return Array.Empty<RedisValue>();
+            }
+            if (!_sortedSet.ContainsKey(key))
+            {
+                return Array.Empty<RedisValue>();
+            }
+            return _sortedSet[key].Where(x => x.Score >= start && x.Score <= stop).Select(x => x.Value).ToArray();
         }
 
         public Task<RedisValue[]> SortedSetRangeByScoreAsync(RedisKey key, double start = double.NegativeInfinity, double stop = double.PositiveInfinity, Exclude exclude = Exclude.None, Order order = Order.Ascending, long skip = 0, long take = -1, CommandFlags flags = CommandFlags.None)
@@ -67,6 +115,15 @@ namespace StackExchange.Redis.Branch.UnitTest.Fakes
             return Task.FromResult(_sortedSet[key].Where(x => x.Score >= start && x.Score <= stop).Select(x => x.Value).ToArray());
         }
 
+        public long SetLength(RedisKey key, CommandFlags flags = CommandFlags.None)
+        {
+            if (IsKeyExpired(key))
+            {
+                return (long)0;
+            }
+            return (long)_set[key].Count;
+        }
+
         public Task<long> SetLengthAsync(RedisKey key, CommandFlags flags = CommandFlags.None)
         {
             if (IsKeyExpired(key))
@@ -74,6 +131,15 @@ namespace StackExchange.Redis.Branch.UnitTest.Fakes
                 return Task.FromResult((long)0);
             }
             return Task.FromResult((long)_set[key].Count);
+        }
+
+        public long SortedSetLength(RedisKey key, double min = double.NegativeInfinity, double max = double.PositiveInfinity, Exclude exclude = Exclude.None, CommandFlags flags = CommandFlags.None)
+        {
+            if (IsKeyExpired(key))
+            {
+                return (long)0;
+            }
+            return (long)_sortedSet[key].Count(x => x.Score >= min && x.Score <= max);
         }
 
         public Task<long> SortedSetLengthAsync(RedisKey key, double min = double.NegativeInfinity, double max = double.PositiveInfinity, Exclude exclude = Exclude.None, CommandFlags flags = CommandFlags.None)
@@ -85,6 +151,15 @@ namespace StackExchange.Redis.Branch.UnitTest.Fakes
             return Task.FromResult((long)_sortedSet[key].Count( x => x.Score >= min && x.Score <= max));
         }
 
+        public bool SortedSetAdd(RedisKey key, RedisValue member, double score, When when = When.Always, CommandFlags flags = CommandFlags.None)
+        {
+            if (!_sortedSet.ContainsKey(key))
+            {
+                _sortedSet[key] = new SortedSet<FakeRedisValueWrapper>(new SortedFakeRedisValueWrapperComparar());
+            }
+            return _sortedSet[key].Add(new FakeRedisValueWrapper() { Value = member, Score = score });
+        }
+
         public Task<bool> SortedSetAddAsync(RedisKey key, RedisValue member, double score, When when = When.Always, CommandFlags flags = CommandFlags.None)
         {
             if (!_sortedSet.ContainsKey(key))
@@ -94,6 +169,15 @@ namespace StackExchange.Redis.Branch.UnitTest.Fakes
             return Task.FromResult(_sortedSet[key].Add(new FakeRedisValueWrapper() { Value = member, Score = score }));
         }
 
+        public bool SetAdd(RedisKey key, RedisValue value, CommandFlags flags = CommandFlags.None)
+        {
+            if (!_set.ContainsKey(key))
+            {
+                _set[key] = new HashSet<RedisValue>();
+            }
+            return _set[key].Add(value);
+        }
+
         public Task<bool> SetAddAsync(RedisKey key, RedisValue value, CommandFlags flags = CommandFlags.None)
         {
             if (!_set.ContainsKey(key))
@@ -101,6 +185,19 @@ namespace StackExchange.Redis.Branch.UnitTest.Fakes
                 _set[key] = new HashSet<RedisValue>();
             }
             return Task.FromResult(_set[key].Add(value));
+        }
+
+        public bool SortedSetRemove(RedisKey key, RedisValue member, CommandFlags flags = CommandFlags.None)
+        {
+            if (_sortedSet.ContainsKey(key))
+            {
+                FakeRedisValueWrapper fakeRedisValueWrapper = _sortedSet[key].FirstOrDefault(x => x.Value == member);
+                if (fakeRedisValueWrapper != default)
+                {
+                    return _sortedSet[key].Remove(fakeRedisValueWrapper);
+                }
+            }
+            return false;
         }
 
         public Task<bool> SortedSetRemoveAsync(RedisKey key, RedisValue member, CommandFlags flags = CommandFlags.None)
@@ -116,6 +213,19 @@ namespace StackExchange.Redis.Branch.UnitTest.Fakes
             return Task.FromResult(false);
         }
 
+        public bool SetRemove(RedisKey key, RedisValue value, CommandFlags flags = CommandFlags.None)
+        {
+            if (_set.ContainsKey(key))
+            {
+                RedisValue redisValue = _set[key].FirstOrDefault(x => x == value);
+                if (redisValue != default)
+                {
+                    return _set[key].Remove(redisValue);
+                }
+            }
+            return false;
+        }
+
         public Task<bool> SetRemoveAsync(RedisKey key, RedisValue value, CommandFlags flags = CommandFlags.None)
         {
             if (_set.ContainsKey(key))
@@ -127,6 +237,16 @@ namespace StackExchange.Redis.Branch.UnitTest.Fakes
                 }
             }
             return Task.FromResult(false);
+        }
+
+        public bool KeyExpire(RedisKey key, TimeSpan? expiry, CommandFlags flags = CommandFlags.None)
+        {
+            if (expiry.HasValue)
+            {
+                _keyExpiryDates[key] = DateTimeOffset.UtcNow.Add(expiry.Value);
+            }
+
+            return true;
         }
 
         public Task<bool> KeyExpireAsync(RedisKey key, TimeSpan? expiry, CommandFlags flags = CommandFlags.None)
@@ -358,11 +478,6 @@ namespace StackExchange.Redis.Branch.UnitTest.Fakes
             throw new NotImplementedException();
         }
 
-        public HashEntry[] HashGetAll(RedisKey key, CommandFlags flags = CommandFlags.None)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<RedisValue> HashGetAsync(RedisKey key, RedisValue hashField, CommandFlags flags = CommandFlags.None)
         {
             throw new NotImplementedException();
@@ -434,11 +549,6 @@ namespace StackExchange.Redis.Branch.UnitTest.Fakes
         }
 
         public IAsyncEnumerable<HashEntry> HashScanAsync(RedisKey key, RedisValue pattern = default, int pageSize = 250, long cursor = 0, int pageOffset = 0, CommandFlags flags = CommandFlags.None)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void HashSet(RedisKey key, HashEntry[] hashFields, CommandFlags flags = CommandFlags.None)
         {
             throw new NotImplementedException();
         }
@@ -548,11 +658,6 @@ namespace StackExchange.Redis.Branch.UnitTest.Fakes
             throw new NotImplementedException();
         }
 
-        public bool KeyDelete(RedisKey key, CommandFlags flags = CommandFlags.None)
-        {
-            throw new NotImplementedException();
-        }
-
         public long KeyDelete(RedisKey[] keys, CommandFlags flags = CommandFlags.None)
         {
             throw new NotImplementedException();
@@ -589,11 +694,6 @@ namespace StackExchange.Redis.Branch.UnitTest.Fakes
         }
 
         public Task<long> KeyExistsAsync(RedisKey[] keys, CommandFlags flags = CommandFlags.None)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool KeyExpire(RedisKey key, TimeSpan? expiry, CommandFlags flags = CommandFlags.None)
         {
             throw new NotImplementedException();
         }
@@ -968,11 +1068,6 @@ namespace StackExchange.Redis.Branch.UnitTest.Fakes
             throw new NotImplementedException();
         }
 
-        public bool SetAdd(RedisKey key, RedisValue value, CommandFlags flags = CommandFlags.None)
-        {
-            throw new NotImplementedException();
-        }
-
         public long SetAdd(RedisKey key, RedisValue[] values, CommandFlags flags = CommandFlags.None)
         {
             throw new NotImplementedException();
@@ -1033,16 +1128,6 @@ namespace StackExchange.Redis.Branch.UnitTest.Fakes
             throw new NotImplementedException();
         }
 
-        public long SetLength(RedisKey key, CommandFlags flags = CommandFlags.None)
-        {
-            throw new NotImplementedException();
-        }
-
-        public RedisValue[] SetMembers(RedisKey key, CommandFlags flags = CommandFlags.None)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool SetMove(RedisKey source, RedisKey destination, RedisValue value, CommandFlags flags = CommandFlags.None)
         {
             throw new NotImplementedException();
@@ -1093,11 +1178,6 @@ namespace StackExchange.Redis.Branch.UnitTest.Fakes
             throw new NotImplementedException();
         }
 
-        public bool SetRemove(RedisKey key, RedisValue value, CommandFlags flags = CommandFlags.None)
-        {
-            throw new NotImplementedException();
-        }
-
         public long SetRemove(RedisKey key, RedisValue[] values, CommandFlags flags = CommandFlags.None)
         {
             throw new NotImplementedException();
@@ -1144,11 +1224,6 @@ namespace StackExchange.Redis.Branch.UnitTest.Fakes
         }
 
         public bool SortedSetAdd(RedisKey key, RedisValue member, double score, CommandFlags flags)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool SortedSetAdd(RedisKey key, RedisValue member, double score, When when = When.Always, CommandFlags flags = CommandFlags.None)
         {
             throw new NotImplementedException();
         }
@@ -1218,12 +1293,6 @@ namespace StackExchange.Redis.Branch.UnitTest.Fakes
             throw new NotImplementedException();
         }
 
-        public long SortedSetLength(RedisKey key, double min = double.NegativeInfinity, double max = double.PositiveInfinity, Exclude exclude = Exclude.None, CommandFlags flags = CommandFlags.None)
-        {
-            throw new NotImplementedException();
-        }
-
-
         public long SortedSetLengthByValue(RedisKey key, RedisValue min, RedisValue max, Exclude exclude = Exclude.None, CommandFlags flags = CommandFlags.None)
         {
             throw new NotImplementedException();
@@ -1274,11 +1343,6 @@ namespace StackExchange.Redis.Branch.UnitTest.Fakes
             throw new NotImplementedException();
         }
 
-        public RedisValue[] SortedSetRangeByScore(RedisKey key, double start = double.NegativeInfinity, double stop = double.PositiveInfinity, Exclude exclude = Exclude.None, Order order = Order.Ascending, long skip = 0, long take = -1, CommandFlags flags = CommandFlags.None)
-        {
-            throw new NotImplementedException();
-        }
-
         public SortedSetEntry[] SortedSetRangeByScoreWithScores(RedisKey key, double start = double.NegativeInfinity, double stop = double.PositiveInfinity, Exclude exclude = Exclude.None, Order order = Order.Ascending, long skip = 0, long take = -1, CommandFlags flags = CommandFlags.None)
         {
             throw new NotImplementedException();
@@ -1315,11 +1379,6 @@ namespace StackExchange.Redis.Branch.UnitTest.Fakes
         }
 
         public Task<long?> SortedSetRankAsync(RedisKey key, RedisValue member, Order order = Order.Ascending, CommandFlags flags = CommandFlags.None)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool SortedSetRemove(RedisKey key, RedisValue member, CommandFlags flags = CommandFlags.None)
         {
             throw new NotImplementedException();
         }

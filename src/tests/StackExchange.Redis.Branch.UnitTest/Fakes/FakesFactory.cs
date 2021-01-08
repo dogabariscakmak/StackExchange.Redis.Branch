@@ -7,6 +7,11 @@
             return new StockRepository(CreateConnectionMultiplexerFake());
         }
 
+        public static StockRepository CreateStockRepositoryFake(IConnectionMultiplexer connectionMultiplexer)
+        {
+            return new StockRepository(connectionMultiplexer);
+        }
+
         public static IConnectionMultiplexer CreateConnectionMultiplexerFake()
         {
             return new FakeConnectionMultiplexer(CreateDatabaseFake());

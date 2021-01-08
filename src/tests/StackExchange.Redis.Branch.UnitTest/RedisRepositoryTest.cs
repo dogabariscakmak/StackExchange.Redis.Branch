@@ -24,7 +24,7 @@ namespace StackExchange.Redis.Branch.UnitTest
             stubStockRepository.AddBranch(allBranch);
 
             //Assert 
-            Assert.Equal(2, stubStockRepository.GetBranches().Count());
+            Assert.Equal(20, stubStockRepository.GetBranches().Count());
         }
 
         [Fact]

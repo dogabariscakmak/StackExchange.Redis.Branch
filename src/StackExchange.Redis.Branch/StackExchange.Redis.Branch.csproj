@@ -4,10 +4,13 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Version>1.0.1</Version>
+    <Version>1.1.0</Version>
     <Authors>Doğa Barış Çakmak</Authors>
-    <Description>Lightweight library to query Redis by predefined queries on top of StackExchange.Redis.
-This library enables that you can use redis database with predefined queries. Queries are seen like pipelines which are executed when data is writing/removing on redis.</Description>
+    <Description>
+        Lightweight library to query Redis by predefined queries on top of StackExchange.Redis.
+        This library enables that you can use redis database with predefined queries. Queries are seen like pipelines which are executed when data is writing/removing on redis.
+        This library also enables RedisQueryProvider. With this provider, Redis entities can be used with IQueryable.
+    </Description>
     <Copyright>2020 Doğa Barış Çakmak</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/dogabariscakmak/StackExchange.Redis.Branch</PackageProjectUrl>

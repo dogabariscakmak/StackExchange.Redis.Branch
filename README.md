@@ -26,17 +26,23 @@
 * [About the Project](#about-the-project)
 * [Getting Started](#getting-started)
     * [Usage](#usage)
+    * [How It Works](#how-it-works)
 * [Roadmap](#roadmap)
 * [License](#license)
 * [Contact](#contact)
 
+---
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project 
 
 ![StackExchange.Redis.Branch][product-screenshot]
 
-This library enables that you can use redis database with predefined queries. Queries are seen like pipelines which are executed when data is writing/removing on redis.  
+This library enables that you can use redis database with predefined queries. Queries are seen like pipelines which are executed when data is writing/removing on redis.
+
+It also enables IQueryable Provider for Redis by using predefined queries mechanism.
+
+---
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -49,12 +55,14 @@ To get start with StackExchange.Redis.Branch you can clone repository or add as 
 #### .NET CLI
 ```dotnet add package StackExchange.Redis.Branch --version 1.0.0```
 
-#### ```PackageReference```
+#### PackageReference
 ```<PackageReference Include="StackExchange.Redis.Branch" Version="1.0.0" />```
 
+---
 
 <!-- USAGE EXAMPLES -->
 ## Usage
+### Repository and Branch Usage
 
 StackExchange.Redis.Branch manages all data operations via by Repository classes. This repository classes are bascically data stores for entities which are inhereted by ```RedisEntity```. You need to implement a repository inhereted by ```RedisRepositoryBase``` for each entity you want store in redis. 
 
@@ -278,17 +286,71 @@ StackExchange.Redis.Branch manages all data operations via by Repository classes
     }
 ```
 
+### Query Provider
+
+To use ```RedisQueryProvider```, there are a couple things that should be done.
+
+* As a first step, the Redis entity to be queried must be marked with ```RedisQueryable```. In this way, ```RedisRepository``` knows which entities are queryable and creates regarding property branches for them.
+```csharp
+    [RedisQueryable]
+    public class StockEntity : RedisEntity
+    {
+        public string Name { get; set; }
+        public string Symbol { get; set; }
+        ...
+    }
+```
+
+* Then, ```RedisQueryProvider``` can be uses ad below.
+```csharp
+    QueryProvider provider = new RedisQueryProvider(connectionMultiplexer);
+    RedisQuery<StockEntity> redisQuery = new RedisQuery<StockEntity>(provider);
+    IQueryable<StockEntity> query = redisQuery.Where(s => (s.IsActive == true));
+    List<StockEntity> result = query.ToList();
+```
+
+_**Limitations for Query Provider**_
+
+```RedisQueryProvider``` is early stage of development therefore, it supports limited number of featuresv of ```IQueryable```.
+
+_Supports_
+
+* ```Where``` clause for ```bool``` ```char``` ```byte``` ```short``` ```ushort``` ```int``` ```uint``` ```long``` ```ulong``` ```float``` ```double``` ```decimal``` ```string``` ```enum``` ```DateTime```
+
+* Binary comprasions for ```&&``` ```||``` ```==``` ```!=``` ```<``` ```<=``` ```>``` ```>=```
+* Local variable references such as 
+```
+    string name = "Abbott Laboratories";
+    IQueryable<StockEntity> query = redisQuery.Where(s => (s.Name == name));
+```
+
+_Not Supports_
+
+Any other feature is not supported yet such as ```Select``` ```NestedQueries``` ```Join``` ```SelectMany``` ```OrderBy``` ```GroupBy``` etc...
+
+---
+
+<!-- HOW IT WORKS -->
+## How It Works
+
+* [How to Use Redis with Predefined Queries](https://dogabariscakmak.medium.com/how-to-use-redis-with-predefined-queries-5f9b9b1579ae)
+* [Custom Query Provider for ](https://dogabariscakmak.medium.com/how-to-use-redis-with-predefined-queries-5f9b9b1579ae)
+
+---
+
 <!-- ROADMAP -->
 ## Roadmap
 
 See the [open issues](https://github.com/dogabariscakmak/StackExchange.Redis.Branch/issues) for a list of proposed features (and known issues).
+
+---
 
 <!-- LICENSE -->
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
-
+---
 
 <!-- CONTACT -->
 ## Contact
